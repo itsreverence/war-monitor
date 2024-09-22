@@ -11,7 +11,8 @@ import {
   DrawerHeader,
   DrawerTitle,
   DrawerTrigger,
-} from "@/components/ui/drawer"
+} from "@/components/ui/drawer";
+import { useParams } from "react-router-dom";
 
 const webOptions = {
   search: [
@@ -34,51 +35,25 @@ const webOptions = {
 
 export default function WebPage() {
   const { t } = useTranslation();
+  const { category } = useParams<{ category: string }>();
   const [currentUrl, setCurrentUrl] = useState('');
+  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+
+  const options = webOptions[category as keyof typeof webOptions] || [];
+
+  const handleOptionClick = (url: string) => {
+    setCurrentUrl(url);
+    setIsDrawerOpen(false);
+  };
 
   return (
     <div className="w-full h-full flex flex-col">
-      <div className="flex items-center p-2 bg-background">
-        <Drawer>
-          <DrawerTrigger asChild>
-            <Button variant="outline" size="icon">
-              <MenuIcon className="h-4 w-4" />
-            </Button>
-          </DrawerTrigger>
-          <DrawerContent>
-            <DrawerHeader>
-              <DrawerTitle>{t('nav.web.title')}</DrawerTitle>
-              <DrawerDescription>{t('nav.web.description')}</DrawerDescription>
-            </DrawerHeader>
-            <div className="p-4 space-y-4">
-              {Object.entries(webOptions).map(([category, options]) => (
-                <div key={category}>
-                  <h3 className="mb-2 text-lg font-semibold">{t(`nav.web.${category}`)}</h3>
-                  <div className="space-y-2">
-                    {options.map((option) => (
-                      <Button
-                        key={option.name}
-                        variant="outline"
-                        className="w-full justify-start"
-                        onClick={() => {
-                          setCurrentUrl(option.url);
-                          document.querySelector<HTMLButtonElement>('.drawer-close')?.click();
-                        }}
-                      >
-                        {option.name}
-                      </Button>
-                    ))}
-                  </div>
-                </div>
-              ))}
-            </div>
-            <DrawerFooter>
-              <DrawerClose asChild>
-                <Button variant="outline">Close</Button>
-              </DrawerClose>
-            </DrawerFooter>
-          </DrawerContent>
-        </Drawer>
+      <div className="flex items-center justify-between p-2 bg-background">
+        <Button variant="outline" size="icon" onClick={() => setIsDrawerOpen(true)}>
+          <MenuIcon className="h-4 w-4" />
+        </Button>
+        <h1 className="text-xl font-semibold">{t(`nav.web.${category}`)}</h1>
+        <div className="w-8"></div> {/* This empty div balances the layout */}
       </div>
       <div className="flex-grow">
         {currentUrl ? (
@@ -92,6 +67,31 @@ export default function WebPage() {
           </div>
         )}
       </div>
+      <Drawer open={isDrawerOpen} onOpenChange={setIsDrawerOpen}>
+        <DrawerContent>
+          <DrawerHeader>
+            <DrawerTitle>{t(`nav.web.${category}`)}</DrawerTitle>
+            <DrawerDescription>{t(`nav.web.${category}Description`)}</DrawerDescription>
+          </DrawerHeader>
+          <div className="p-4 space-y-4">
+            {options.map((option) => (
+              <Button
+                key={option.name}
+                variant="outline"
+                className="w-full justify-start"
+                onClick={() => handleOptionClick(option.url)}
+              >
+                {option.name}
+              </Button>
+            ))}
+          </div>
+          <DrawerFooter>
+            <DrawerClose asChild>
+              <Button variant="outline">Close</Button>
+            </DrawerClose>
+          </DrawerFooter>
+        </DrawerContent>
+      </Drawer>
     </div>
   );
 }

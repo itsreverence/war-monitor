@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { createRoot } from "react-dom/client";
-import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import { BrowserRouter as Router, Route, Routes, useParams } from "react-router-dom";
 import HomePage from "./pages/HomePage";
 import HomeContent from "./components/HomeContent";
 import SupportPage from "./pages/SupportPage";
@@ -28,7 +28,7 @@ export default function App() {
                         <Route index element={<HomeContent />} />
                         <Route path="support" element={<SupportPage />} />
                         <Route path="settings" element={<SettingsPage />} />
-                        <Route path="web" element={<WebPage />} />
+                        <Route path="web/:category" element={<WebPage />} />
                     </Route>
                 </Routes>
             </BaseLayout>

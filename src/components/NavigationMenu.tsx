@@ -3,6 +3,9 @@ import { GlobeIcon, SettingsIcon, LifeBuoyIcon, SearchIcon, InfoIcon, CheckCircl
 import { useNavigate } from "react-router-dom"
 import { useTranslation } from "react-i18next"
 import { cn } from "@/lib/utils"
+import { useState } from "react"
+import { Drawer, DrawerContent } from "@/components/ui/drawer"
+import { WebDrawerContent } from "@/components/WebDrawerContent"
 
 import {
   NavigationMenu,
@@ -18,17 +21,32 @@ export function MainNavigationMenu() {
   const navigate = useNavigate()
   const { t } = useTranslation()
 
+  const webOptions = [
+    { key: 'search', icon: <SearchIcon className="mr-2 h-4 w-4" /> },
+    { key: 'information', icon: <InfoIcon className="mr-2 h-4 w-4" /> },
+    { key: 'verification', icon: <CheckCircleIcon className="mr-2 h-4 w-4" /> },
+    { key: 'translation', icon: <LanguagesIcon className="mr-2 h-4 w-4" /> },
+  ]
+
   return (
     <NavigationMenu className="w-full justify-start">
       <NavigationMenuList className="space-x-4">
         <NavigationMenuItem>
-          <NavigationMenuLink 
-            className={navigationMenuTriggerStyle()} 
-            onClick={() => navigate("/web")}
-          >
-            <GlobeIcon className="mr-2 h-4 w-4" />
-            {t('nav.web.title')}
-          </NavigationMenuLink>
+          <NavigationMenuTrigger>{t('nav.web.title')}</NavigationMenuTrigger>
+          <NavigationMenuContent>
+            <ul className="grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-2 lg:w-[600px]">
+              {webOptions.map((option) => (
+                <ListItem
+                  key={option.key}
+                  title={t(`nav.web.${option.key}`)}
+                  icon={option.icon}
+                  onClick={() => navigate(`/web/${option.key}`)}
+                >
+                  {t(`nav.web.${option.key}Description`)}
+                </ListItem>
+              ))}
+            </ul>
+          </NavigationMenuContent>
         </NavigationMenuItem>
         <NavigationMenuItem>
           <NavigationMenuLink 
