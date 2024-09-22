@@ -10,6 +10,7 @@ import {
   NavigationMenuTrigger,
   navigationMenuTriggerStyle,
 } from "@/components/ui/navigation-menu"
+import SettingsContent from "./SettingsContent"
 
 export function MainNavigationMenu() {
   return (
@@ -22,10 +23,13 @@ export function MainNavigationMenu() {
           </NavigationMenuLink>
         </NavigationMenuItem>
         <NavigationMenuItem>
-          <NavigationMenuLink className={navigationMenuTriggerStyle()} href="#">
+          <NavigationMenuTrigger>
             <SettingsIcon className="mr-2 h-4 w-4" />
             Settings
-          </NavigationMenuLink>
+          </NavigationMenuTrigger>
+          <NavigationMenuContent>
+            <SettingsContent />
+          </NavigationMenuContent>
         </NavigationMenuItem>
         <NavigationMenuItem>
           <NavigationMenuLink className={navigationMenuTriggerStyle()} href="#">
