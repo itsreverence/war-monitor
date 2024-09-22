@@ -1,6 +1,7 @@
 import * as React from "react"
 import { GlobeIcon, SettingsIcon, LifeBuoyIcon, MessageSquarePlusIcon } from "lucide-react"
 import { useNavigate } from "react-router-dom"
+import { useTranslation } from "react-i18next"
 
 import {
   NavigationMenu,
@@ -15,6 +16,7 @@ import SettingsContent from "./SettingsContent"
 
 export function MainNavigationMenu() {
   const navigate = useNavigate()
+  const { t } = useTranslation()
 
   return (
     <NavigationMenu className="w-full justify-start">
@@ -22,13 +24,13 @@ export function MainNavigationMenu() {
         <NavigationMenuItem>
           <NavigationMenuLink className={navigationMenuTriggerStyle()} href="#">
             <GlobeIcon className="mr-2 h-4 w-4" />
-            Web
+            {t('nav.web')}
           </NavigationMenuLink>
         </NavigationMenuItem>
         <NavigationMenuItem>
           <NavigationMenuTrigger>
             <SettingsIcon className="mr-2 h-4 w-4" />
-            Settings
+            {t('nav.settings')}
           </NavigationMenuTrigger>
           <NavigationMenuContent>
             <SettingsContent />
@@ -40,7 +42,7 @@ export function MainNavigationMenu() {
             onClick={() => navigate("/support")}
           >
             <LifeBuoyIcon className="mr-2 h-4 w-4" />
-            Support
+            {t('nav.support')}
           </NavigationMenuLink>
         </NavigationMenuItem>
       </NavigationMenuList>

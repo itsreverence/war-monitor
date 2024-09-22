@@ -8,12 +8,22 @@ i18n.use(initReactI18next).init({
             translation: {
                 title: "Home Page",
                 description: "This is an example of translation in en",
+                nav: {
+                    web: "Web",
+                    settings: "Settings",
+                    support: "Support"
+                }
             },
         },
         "pt-BR": {
             translation: {
                 title: "Página Inicial",
                 description: "Este é um exemplo de tradução em pt_BR",
+                nav: {
+                    web: "Web",
+                    settings: "Configurações",
+                    support: "Suporte"
+                }
             },
         },
     },
