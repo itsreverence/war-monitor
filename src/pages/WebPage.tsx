@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { Button } from "@/components/ui/button";
 import { MenuIcon } from "lucide-react";
@@ -10,7 +10,7 @@ import {
     SheetTitle,
     SheetTrigger,
 } from "@/components/ui/sheet";
-import { useParams } from "react-router-dom";
+import { useParams, useLocation } from "react-router-dom";
 
 const webOptions = {
     search: [
@@ -31,13 +31,25 @@ const webOptions = {
     ],
 };
 
-export default function WebPage() {
+export default function WebPage({ openSheetByDefault = false }: { openSheetByDefault?: boolean }) {
     const { t } = useTranslation();
     const { category } = useParams<{ category: string }>();
+    const location = useLocation();
     const [currentUrl, setCurrentUrl] = useState("");
     const [isSheetOpen, setIsSheetOpen] = useState(false);
 
     const options = webOptions[category as keyof typeof webOptions] || [];
+
+    useEffect(() => {
+        const state = location.state as { openSheetByDefault?: boolean, category?: string } | null;
+        if (state?.openSheetByDefault && state.category === category) {
+            setIsSheetOpen(true);
+        }
+    }, [location, category]);
+
+    useEffect(() => {
+        setIsSheetOpen(openSheetByDefault);
+    }, [openSheetByDefault]);
 
     const handleOptionClick = (url: string) => {
         setCurrentUrl(url);

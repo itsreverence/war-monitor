@@ -33,6 +33,15 @@ export function MainNavigationMenu() {
         { key: "translation", icon: <LanguagesIcon className="mr-2 h-4 w-4" /> },
     ];
 
+    const handleWebOptionClick = (key: string) => {
+        navigate(`/web/${key}`, { 
+            state: { 
+                openSheetByDefault: true,
+                category: key
+            } 
+        });
+    };
+
     return (
         <NavigationMenu className="w-full justify-start">
             <NavigationMenuList className="space-x-4">
@@ -45,7 +54,7 @@ export function MainNavigationMenu() {
                                     key={option.key}
                                     title={t(`nav.web.${option.key}`)}
                                     icon={option.icon}
-                                    onClick={() => navigate(`/web/${option.key}`)}
+                                    onClick={() => handleWebOptionClick(option.key)}
                                 >
                                     {t(`nav.web.${option.key}Description`)}
                                 </ListItem>

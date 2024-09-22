@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { createRoot } from "react-dom/client";
-import { BrowserRouter as Router, Route, Routes, useParams } from "react-router-dom";
+import { BrowserRouter as Router, Route, Routes, useParams, useLocation } from "react-router-dom";
 import HomePage from "./pages/HomePage";
 import HomeContent from "./components/HomeContent";
 import SupportPage from "./pages/SupportPage";
@@ -28,12 +28,24 @@ export default function App() {
                         <Route index element={<HomeContent />} />
                         <Route path="support" element={<SupportPage />} />
                         <Route path="settings" element={<SettingsPage />} />
-                        <Route path="web/:category" element={<WebPage />} />
+                        <Route
+                            path="web/:category"
+                            element={
+                                <WebPageWrapper />
+                            }
+                        />
                     </Route>
                 </Routes>
             </BaseLayout>
         </Router>
     );
+}
+
+function WebPageWrapper() {
+    const location = useLocation();
+    const state = location.state as { openSheetByDefault?: boolean } | null;
+    const openSheetByDefault = state?.openSheetByDefault || false;
+    return <WebPage openSheetByDefault={openSheetByDefault} />;
 }
 
 const root = createRoot(document.getElementById("app")!);
