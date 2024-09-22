@@ -10,6 +10,7 @@ import {
     SheetTitle,
 } from "@/components/ui/sheet";
 import { useParams, useLocation } from "react-router-dom";
+import { useAdBlocker } from "@/hooks/useAdBlocker";
 
 const webOptions = {
     search: [
@@ -37,6 +38,7 @@ export default function WebPage({ openSheetByDefault = false }: { openSheetByDef
     const [currentUrl, setCurrentUrl] = useState("");
     const [isSheetOpen, setIsSheetOpen] = useState(false);
     const [expandedCategories, setExpandedCategories] = useState<string[]>([]);
+    const { isEnabled: isAdBlockerEnabled } = useAdBlocker();
 
     useEffect(() => {
         setIsSheetOpen(true);
@@ -106,7 +108,11 @@ export default function WebPage({ openSheetByDefault = false }: { openSheetByDef
             </Sheet>
             <div className="flex-grow">
                 {currentUrl ? (
-                    <webview src={currentUrl} style={{ width: "100%", height: "100%" }}></webview>
+                    <webview
+                        src={currentUrl}
+                        style={{ width: "100%", height: "100%" }}
+                        webpreferences={`contextIsolation=yes, nodeIntegration=no${isAdBlockerEnabled ? ", contentBlocking=true" : ""}`}
+                    ></webview>
                 ) : (
                     <div className="flex h-full w-full items-center justify-center text-muted-foreground">
                         {t("nav.web.selectOption")}

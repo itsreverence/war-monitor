@@ -2,6 +2,7 @@ import React from "react";
 import { useTranslation } from "react-i18next";
 import LangToggle from "@/components/LangToggle";
 import ToggleTheme from "@/components/ToggleTheme";
+import ToggleAdBlocker from "@/components/ToggleAdBlocker";
 
 export default function SettingsPage() {
     const { t } = useTranslation();
@@ -17,6 +18,10 @@ export default function SettingsPage() {
                 <div>
                     <h2 className="mb-2 text-lg font-semibold">{t("nav.settings.theme")}</h2>
                     <ToggleTheme />
+                </div>
+                <div>
+                    <h2 className="mb-2 text-lg font-semibold">{t("nav.settings.adBlocker")}</h2>
+                    <ToggleAdBlocker />
                 </div>
             </div>
         </div>
