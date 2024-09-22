@@ -25,10 +25,10 @@ i18n.use(initReactI18next).init({
                     settings: {
                         title: "Settings",
                         language: "Language",
-                        theme: "Theme"
+                        theme: "Theme",
                     },
-                    support: "Support"
-                }
+                    support: "Support",
+                },
             },
         },
         "pt-BR": {
@@ -52,10 +52,10 @@ i18n.use(initReactI18next).init({
                     settings: {
                         title: "Configurações",
                         language: "Idioma",
-                        theme: "Tema"
+                        theme: "Tema",
                     },
-                    support: "Suporte"
-                }
+                    support: "Suporte",
+                },
             },
         },
     },

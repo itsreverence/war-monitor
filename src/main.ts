@@ -1,7 +1,7 @@
 import { app, BrowserWindow } from "electron";
 import registerListeners from "./helpers/ipc/listeners-register";
 import path from "path";
-import { addExternalLinksEventListener } from './helpers/ipc/external-links/external-links-listeners';
+import { addExternalLinksEventListener } from "./helpers/ipc/external-links/external-links-listeners";
 
 const inDevelopment = process.env.NODE_ENV === "development";
 

@@ -7,8 +7,8 @@ export default function HomeContent() {
 
     return (
         <>
-            <h1 className="text-2xl font-bold mb-4">{t('title')}</h1>
-            <p>{t('description')}</p>
+            <h1 className="mb-4 text-2xl font-bold">{t("title")}</h1>
+            <p>{t("description")}</p>
         </>
     );
 }

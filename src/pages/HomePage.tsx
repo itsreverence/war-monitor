@@ -7,8 +7,8 @@ export default function HomePage() {
     const { t } = useTranslation();
 
     return (
-        <div className="flex flex-col h-screen">
-            <nav className="p-4 bg-background">
+        <div className="flex h-screen flex-col">
+            <nav className="bg-background p-4">
                 <MainNavigationMenu />
             </nav>
             <main className="flex-grow overflow-hidden">
