@@ -39,7 +39,7 @@ export function MainNavigationMenu() {
             state: { 
                 openSheetByDefault: true,
                 category: key,
-                timestamp: Date.now() // Add a timestamp to ensure state change
+                timestamp: Date.now()
             } 
         });
     };

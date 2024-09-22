@@ -1,14 +1,13 @@
 import React, { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { Button } from "@/components/ui/button";
-import { MenuIcon } from "lucide-react";
+import { MenuIcon, ChevronDown, ChevronUp } from "lucide-react";
 import {
     Sheet,
     SheetContent,
     SheetDescription,
     SheetHeader,
     SheetTitle,
-    SheetTrigger,
 } from "@/components/ui/sheet";
 import { useParams, useLocation } from "react-router-dom";
 
@@ -37,11 +36,13 @@ export default function WebPage({ openSheetByDefault = false }: { openSheetByDef
     const location = useLocation();
     const [currentUrl, setCurrentUrl] = useState("");
     const [isSheetOpen, setIsSheetOpen] = useState(false);
-
-    const options = webOptions[category as keyof typeof webOptions] || [];
+    const [expandedCategories, setExpandedCategories] = useState<string[]>([]);
 
     useEffect(() => {
         setIsSheetOpen(true);
+        if (category) {
+            setExpandedCategories([category]);
+        }
     }, [category, location.state]);
 
     useEffect(() => {
@@ -53,26 +54,52 @@ export default function WebPage({ openSheetByDefault = false }: { openSheetByDef
         setIsSheetOpen(false);
     };
 
+    const toggleCategory = (cat: string) => {
+        setExpandedCategories(prev =>
+            prev.includes(cat) ? prev.filter(c => c !== cat) : [...prev, cat]
+        );
+    };
+
     return (
         <div className="flex h-full w-full flex-col">
             <Sheet open={isSheetOpen} onOpenChange={setIsSheetOpen}>
                 <SheetContent side="left">
                     <SheetHeader>
-                        <SheetTitle>{t(`nav.web.${category}`)}</SheetTitle>
+                        <SheetTitle>{t("nav.web.title")}</SheetTitle>
                         <SheetDescription>
-                            {t(`nav.web.${category}Description`)}
+                            {t("nav.web.description")}
                         </SheetDescription>
                     </SheetHeader>
                     <div className="space-y-4 py-4">
-                        {options.map((option) => (
-                            <Button
-                                key={option.name}
-                                variant="outline"
-                                className="w-full justify-start"
-                                onClick={() => handleOptionClick(option.url)}
-                            >
-                                {option.name}
-                            </Button>
+                        {Object.entries(webOptions).map(([cat, options]) => (
+                            <div key={cat} className="space-y-2">
+                                <Button
+                                    variant="outline"
+                                    className="w-full justify-between"
+                                    onClick={() => toggleCategory(cat)}
+                                >
+                                    {t(`nav.web.${cat}`)}
+                                    {expandedCategories.includes(cat) ? (
+                                        <ChevronUp className="h-4 w-4" />
+                                    ) : (
+                                        <ChevronDown className="h-4 w-4" />
+                                    )}
+                                </Button>
+                                {expandedCategories.includes(cat) && (
+                                    <div className="pl-4 space-y-2">
+                                        {options.map((option) => (
+                                            <Button
+                                                key={option.name}
+                                                variant="ghost"
+                                                className="w-full justify-start"
+                                                onClick={() => handleOptionClick(option.url)}
+                                            >
+                                                {option.name}
+                                            </Button>
+                                        ))}
+                                    </div>
+                                )}
+                            </div>
                         ))}
                     </div>
                 </SheetContent>
