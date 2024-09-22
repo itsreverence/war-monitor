@@ -41,11 +41,8 @@ export default function WebPage({ openSheetByDefault = false }: { openSheetByDef
     const options = webOptions[category as keyof typeof webOptions] || [];
 
     useEffect(() => {
-        const state = location.state as { openSheetByDefault?: boolean, category?: string } | null;
-        if (state?.openSheetByDefault && state.category === category) {
-            setIsSheetOpen(true);
-        }
-    }, [location, category]);
+        setIsSheetOpen(true);
+    }, [category, location.state]);
 
     useEffect(() => {
         setIsSheetOpen(openSheetByDefault);
@@ -58,37 +55,28 @@ export default function WebPage({ openSheetByDefault = false }: { openSheetByDef
 
     return (
         <div className="flex h-full w-full flex-col">
-            <div className="flex items-center justify-between bg-background p-2">
-                <Sheet open={isSheetOpen} onOpenChange={setIsSheetOpen}>
-                    <SheetTrigger asChild>
-                        <Button variant="outline" size="icon">
-                            <MenuIcon className="h-4 w-4" />
-                        </Button>
-                    </SheetTrigger>
-                    <SheetContent side="left">
-                        <SheetHeader>
-                            <SheetTitle>{t(`nav.web.${category}`)}</SheetTitle>
-                            <SheetDescription>
-                                {t(`nav.web.${category}Description`)}
-                            </SheetDescription>
-                        </SheetHeader>
-                        <div className="space-y-4 py-4">
-                            {options.map((option) => (
-                                <Button
-                                    key={option.name}
-                                    variant="outline"
-                                    className="w-full justify-start"
-                                    onClick={() => handleOptionClick(option.url)}
-                                >
-                                    {option.name}
-                                </Button>
-                            ))}
-                        </div>
-                    </SheetContent>
-                </Sheet>
-                <h1 className="text-xl font-semibold">{t(`nav.web.${category}`)}</h1>
-                <div className="w-8"></div> {/* This empty div balances the layout */}
-            </div>
+            <Sheet open={isSheetOpen} onOpenChange={setIsSheetOpen}>
+                <SheetContent side="left">
+                    <SheetHeader>
+                        <SheetTitle>{t(`nav.web.${category}`)}</SheetTitle>
+                        <SheetDescription>
+                            {t(`nav.web.${category}Description`)}
+                        </SheetDescription>
+                    </SheetHeader>
+                    <div className="space-y-4 py-4">
+                        {options.map((option) => (
+                            <Button
+                                key={option.name}
+                                variant="outline"
+                                className="w-full justify-start"
+                                onClick={() => handleOptionClick(option.url)}
+                            >
+                                {option.name}
+                            </Button>
+                        ))}
+                    </div>
+                </SheetContent>
+            </Sheet>
             <div className="flex-grow">
                 {currentUrl ? (
                     <webview src={currentUrl} style={{ width: "100%", height: "100%" }}></webview>

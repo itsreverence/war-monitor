@@ -8,7 +8,7 @@ import {
     CheckCircleIcon,
     LanguagesIcon,
 } from "lucide-react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { cn } from "@/lib/utils";
 
@@ -24,6 +24,7 @@ import {
 
 export function MainNavigationMenu() {
     const navigate = useNavigate();
+    const location = useLocation();
     const { t } = useTranslation();
 
     const webOptions = [
@@ -37,7 +38,8 @@ export function MainNavigationMenu() {
         navigate(`/web/${key}`, { 
             state: { 
                 openSheetByDefault: true,
-                category: key
+                category: key,
+                timestamp: Date.now() // Add a timestamp to ensure state change
             } 
         });
     };
