@@ -1,5 +1,6 @@
 import * as React from "react"
-import { GlobeIcon, SettingsIcon, LifeBuoyIcon } from "lucide-react"
+import { GlobeIcon, SettingsIcon, LifeBuoyIcon, MessageSquarePlusIcon } from "lucide-react"
+import { useNavigate } from "react-router-dom"
 
 import {
   NavigationMenu,
@@ -13,6 +14,8 @@ import {
 import SettingsContent from "./SettingsContent"
 
 export function MainNavigationMenu() {
+  const navigate = useNavigate()
+
   return (
     <NavigationMenu className="w-full justify-start">
       <NavigationMenuList className="space-x-4">
@@ -32,7 +35,10 @@ export function MainNavigationMenu() {
           </NavigationMenuContent>
         </NavigationMenuItem>
         <NavigationMenuItem>
-          <NavigationMenuLink className={navigationMenuTriggerStyle()} href="#">
+          <NavigationMenuLink 
+            className={navigationMenuTriggerStyle()} 
+            onClick={() => navigate("/support")}
+          >
             <LifeBuoyIcon className="mr-2 h-4 w-4" />
             Support
           </NavigationMenuLink>

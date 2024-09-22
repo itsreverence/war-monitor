@@ -1,6 +1,7 @@
 import { app, BrowserWindow } from "electron";
 import registerListeners from "./helpers/ipc/listeners-register";
 import path from "path";
+import { addExternalLinksEventListener } from './helpers/ipc/external-links/external-links-listeners';
 
 const inDevelopment = process.env.NODE_ENV === "development";
 
@@ -18,12 +19,13 @@ function createWindow() {
             contextIsolation: true,
             nodeIntegration: true,
             nodeIntegrationInSubFrames: false,
-
+            webviewTag: true,
             preload: preload,
         },
         titleBarStyle: "hidden",
     });
     registerListeners(mainWindow);
+    addExternalLinksEventListener(mainWindow);
 
     if (MAIN_WINDOW_VITE_DEV_SERVER_URL) {
         mainWindow.loadURL(MAIN_WINDOW_VITE_DEV_SERVER_URL);

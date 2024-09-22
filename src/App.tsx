@@ -1,6 +1,9 @@
 import React, { useEffect } from "react";
 import { createRoot } from "react-dom/client";
+import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import HomePage from "./pages/HomePage";
+import HomeContent from "./components/HomeContent";
+import SupportPage from "./pages/SupportPage";
 import BaseLayout from "./layouts/BaseLayout";
 import { syncThemeWithLocal } from "./helpers/theme_helpers";
 import { useTranslation } from "react-i18next";
@@ -16,9 +19,16 @@ export default function App() {
     }, []);
 
     return (
-        <BaseLayout>
-            <HomePage />
-        </BaseLayout>
+        <Router>
+            <BaseLayout>
+                <Routes>
+                    <Route path="/" element={<HomePage />}>
+                        <Route index element={<HomeContent />} />
+                        <Route path="support" element={<SupportPage />} />
+                    </Route>
+                </Routes>
+            </BaseLayout>
+        </Router>
     );
 }
 
