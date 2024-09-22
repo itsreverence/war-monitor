@@ -13,8 +13,8 @@ import {
 
 export function MainNavigationMenu() {
   return (
-    <NavigationMenu>
-      <NavigationMenuList>
+    <NavigationMenu className="w-full justify-start">
+      <NavigationMenuList className="space-x-4">
         <NavigationMenuItem>
           <NavigationMenuLink className={navigationMenuTriggerStyle()} href="#">
             <GlobeIcon className="mr-2 h-4 w-4" />

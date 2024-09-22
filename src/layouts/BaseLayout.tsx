@@ -3,9 +3,9 @@ import DragWindowRegion from "@/components/DragWindowRegion";
 
 export default function BaseLayout({ children }: { children: React.ReactNode }) {
     return (
-        <>
+        <div className="flex flex-col h-screen">
             <DragWindowRegion title="electron-shadcn" />
-            <main>{children}</main>
-        </>
+            {children}
+        </div>
     );
 }
