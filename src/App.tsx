@@ -4,6 +4,7 @@ import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import HomePage from "./pages/HomePage";
 import HomeContent from "./components/HomeContent";
 import SupportPage from "./pages/SupportPage";
+import SettingsPage from "./pages/SettingsPage";
 import BaseLayout from "./layouts/BaseLayout";
 import { syncThemeWithLocal } from "./helpers/theme_helpers";
 import { useTranslation } from "react-i18next";
@@ -25,6 +26,7 @@ export default function App() {
                     <Route path="/" element={<HomePage />}>
                         <Route index element={<HomeContent />} />
                         <Route path="support" element={<SupportPage />} />
+                        <Route path="settings" element={<SettingsPage />} />
                     </Route>
                 </Routes>
             </BaseLayout>

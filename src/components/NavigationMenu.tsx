@@ -13,7 +13,6 @@ import {
   NavigationMenuTrigger,
   navigationMenuTriggerStyle,
 } from "@/components/ui/navigation-menu"
-import SettingsContent from "./SettingsContent"
 
 export function MainNavigationMenu() {
   const navigate = useNavigate()
@@ -45,13 +44,13 @@ export function MainNavigationMenu() {
           </NavigationMenuContent>
         </NavigationMenuItem>
         <NavigationMenuItem>
-          <NavigationMenuTrigger>
+          <NavigationMenuLink 
+            className={navigationMenuTriggerStyle()} 
+            onClick={() => navigate("/settings")}
+          >
             <SettingsIcon className="mr-2 h-4 w-4" />
-            {t('nav.settings')}
-          </NavigationMenuTrigger>
-          <NavigationMenuContent>
-            <SettingsContent />
-          </NavigationMenuContent>
+            {t('nav.settings.title')}
+          </NavigationMenuLink>
         </NavigationMenuItem>
         <NavigationMenuItem>
           <NavigationMenuLink 

@@ -21,7 +21,11 @@ i18n.use(initReactI18next).init({
                         translation: "Translation",
                         translationDescription: "Convert text between languages"
                     },
-                    settings: "Settings",
+                    settings: {
+                        title: "Settings",
+                        language: "Language",
+                        theme: "Theme"
+                    },
                     support: "Support"
                 }
             },
@@ -43,7 +47,11 @@ i18n.use(initReactI18next).init({
                         translation: "Tradução",
                         translationDescription: "Converta texto entre idiomas"
                     },
-                    settings: "Configurações",
+                    settings: {
+                        title: "Configurações",
+                        language: "Idioma",
+                        theme: "Tema"
+                    },
                     support: "Suporte"
                 }
             },
