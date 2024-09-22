@@ -19,7 +19,8 @@ i18n.use(initReactI18next).init({
                         verification: "Verification",
                         verificationDescription: "Validate and authenticate information",
                         translation: "Translation",
-                        translationDescription: "Convert text between languages"
+                        translationDescription: "Convert text between languages",
+                        selectOption: "Select an option",
                     },
                     settings: {
                         title: "Settings",
@@ -45,7 +46,8 @@ i18n.use(initReactI18next).init({
                         verification: "Verificação",
                         verificationDescription: "Valide e autentique informações",
                         translation: "Tradução",
-                        translationDescription: "Converta texto entre idiomas"
+                        translationDescription: "Converta texto entre idiomas",
+                        selectOption: "Selecione uma opção",
                     },
                     settings: {
                         title: "Configurações",

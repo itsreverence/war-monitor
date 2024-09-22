@@ -22,26 +22,13 @@ export function MainNavigationMenu() {
     <NavigationMenu className="w-full justify-start">
       <NavigationMenuList className="space-x-4">
         <NavigationMenuItem>
-          <NavigationMenuTrigger>
+          <NavigationMenuLink 
+            className={navigationMenuTriggerStyle()} 
+            onClick={() => navigate("/web")}
+          >
             <GlobeIcon className="mr-2 h-4 w-4" />
             {t('nav.web.title')}
-          </NavigationMenuTrigger>
-          <NavigationMenuContent>
-            <ul className="grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-2 lg:w-[600px]">
-              <ListItem href="/search" title={t('nav.web.search')} icon={<SearchIcon className="mr-2 h-4 w-4" />}>
-                {t('nav.web.searchDescription')}
-              </ListItem>
-              <ListItem href="/information" title={t('nav.web.information')} icon={<InfoIcon className="mr-2 h-4 w-4" />}>
-                {t('nav.web.informationDescription')}
-              </ListItem>
-              <ListItem href="/verification" title={t('nav.web.verification')} icon={<CheckCircleIcon className="mr-2 h-4 w-4" />}>
-                {t('nav.web.verificationDescription')}
-              </ListItem>
-              <ListItem href="/translation" title={t('nav.web.translation')} icon={<LanguagesIcon className="mr-2 h-4 w-4" />}>
-                {t('nav.web.translationDescription')}
-              </ListItem>
-            </ul>
-          </NavigationMenuContent>
+          </NavigationMenuLink>
         </NavigationMenuItem>
         <NavigationMenuItem>
           <NavigationMenuLink 

@@ -10,6 +10,7 @@ import { syncThemeWithLocal } from "./helpers/theme_helpers";
 import { useTranslation } from "react-i18next";
 import "./localization/i18n";
 import { updateAppLanguage } from "./helpers/language_helpers";
+import WebPage from "./pages/WebPage";
 
 export default function App() {
     const { i18n } = useTranslation();
@@ -27,6 +28,7 @@ export default function App() {
                         <Route index element={<HomeContent />} />
                         <Route path="support" element={<SupportPage />} />
                         <Route path="settings" element={<SettingsPage />} />
+                        <Route path="web" element={<WebPage />} />
                     </Route>
                 </Routes>
             </BaseLayout>
