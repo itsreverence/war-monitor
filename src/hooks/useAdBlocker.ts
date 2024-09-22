@@ -1,17 +1,25 @@
 import { useState, useEffect } from "react";
 
+declare global {
+    interface Window {
+        adblocker: {
+            getStatus: () => Promise<boolean>;
+            toggle: (enable: boolean) => Promise<boolean>;
+        };
+    }
+}
+
 export function useAdBlocker() {
     const [isEnabled, setIsEnabled] = useState(false);
 
     useEffect(() => {
-        const storedValue = localStorage.getItem("adBlockerEnabled");
-        setIsEnabled(storedValue === "true");
+        // Get initial status
+        window.adblocker.getStatus().then(setIsEnabled);
     }, []);
 
-    const toggleAdBlocker = () => {
-        const newValue = !isEnabled;
-        setIsEnabled(newValue);
-        localStorage.setItem("adBlockerEnabled", String(newValue));
+    const toggleAdBlocker = async () => {
+        const newStatus = await window.adblocker.toggle(!isEnabled);
+        setIsEnabled(newStatus);
     };
 
     return { isEnabled, toggleAdBlocker };
