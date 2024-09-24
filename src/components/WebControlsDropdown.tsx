@@ -1,4 +1,4 @@
-import React, { useRef, useEffect } from "react";
+import React from "react";
 import { Button } from "@/components/ui/button";
 import {
     DropdownMenu,
@@ -16,6 +16,7 @@ interface WebControlsDropdownProps {
     onBack: () => void;
     onForward: () => void;
     onHome: () => void;
+    isFullscreen: boolean;
 }
 
 export function WebControlsDropdown({
@@ -23,52 +24,11 @@ export function WebControlsDropdown({
     onReload,
     onBack,
     onForward,
-    onHome
+    onHome,
+    isFullscreen
 }: WebControlsDropdownProps) {
     const { t } = useTranslation();
     const navigate = useNavigate();
-    const webviewRef = useRef<Electron.WebviewTag | null>(null);
-
-    useEffect(() => {
-        const webview = document.querySelector('webview') as Electron.WebviewTag;
-        if (webview) {
-            webviewRef.current = webview;
-        }
-    }, []);
-
-    const handleFullscreen = () => {
-        if (webviewRef.current) {
-            webviewRef.current.executeJavaScript(`
-                if (document.fullscreenElement) {
-                    document.exitFullscreen();
-                } else {
-                    document.documentElement.requestFullscreen();
-                }
-            `);
-        }
-    };
-
-    const handleReload = () => {
-        if (webviewRef.current) {
-            webviewRef.current.reload();
-        }
-    };
-
-    const handleBack = () => {
-        if (webviewRef.current && webviewRef.current.canGoBack()) {
-            webviewRef.current.goBack();
-        }
-    };
-
-    const handleForward = () => {
-        if (webviewRef.current && webviewRef.current.canGoForward()) {
-            webviewRef.current.goForward();
-        }
-    };
-
-    const handleHome = () => {
-        navigate("/");
-    };
 
     return (
         <DropdownMenu>
@@ -78,7 +38,7 @@ export function WebControlsDropdown({
             <DropdownMenuContent>
                 <DropdownMenuItem onClick={onFullscreen}>
                     <Maximize className="mr-2 h-4 w-4" />
-                    <span>{t("nav.web.fullscreen")}</span>
+                    <span>{isFullscreen ? t("nav.web.exitFullscreen") : t("nav.web.fullscreen")}</span>
                 </DropdownMenuItem>
                 <DropdownMenuItem onClick={onReload}>
                     <RotateCw className="mr-2 h-4 w-4" />

@@ -27,6 +27,7 @@ i18n.use(initReactI18next).init({
                         back: "Back",
                         forward: "Forward",
                         home: "Home",
+                        exitFullscreen: "Exit Fullscreen",
                     },
                     settings: {
                         title: "Settings",
@@ -63,6 +64,7 @@ i18n.use(initReactI18next).init({
                         back: "Voltar",
                         forward: "Avançar",
                         home: "Início",
+                        exitFullscreen: "Sair da Tela Cheia",
                     },
                     settings: {
                         title: "Configurações",

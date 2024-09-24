@@ -1,4 +1,3 @@
-// src/pages/SupportPage.tsx
 import React from "react";
 
 export default function SupportPage() {

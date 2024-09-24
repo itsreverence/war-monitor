@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { MainNavigationMenu } from "@/components/NavigationMenu";
 import { Outlet, useNavigate, useLocation } from "react-router-dom";
@@ -8,23 +8,41 @@ export default function HomePage() {
     const { t } = useTranslation();
     const navigate = useNavigate();
     const location = useLocation();
+    const [isFullscreen, setIsFullscreen] = useState(false);
 
     const hasWebView = location.pathname.startsWith('/web/') || location.pathname === '/support';
 
     const handleFullscreen = () => {
-        // Implement fullscreen logic
+        setIsFullscreen(!isFullscreen);
+        const webview = document.querySelector('webview') as Electron.WebviewTag;
+        if (webview) {
+            if (!isFullscreen) {
+                webview.requestFullscreen();
+            } else {
+                document.exitFullscreen();
+            }
+        }
     };
 
     const handleReload = () => {
-        // Implement reload logic
+        const webview = document.querySelector('webview') as Electron.WebviewTag;
+        if (webview) {
+            webview.reload();
+        }
     };
 
     const handleBack = () => {
-        // Implement back logic
+        const webview = document.querySelector('webview') as Electron.WebviewTag;
+        if (webview && webview.canGoBack()) {
+            webview.goBack();
+        }
     };
 
     const handleForward = () => {
-        // Implement forward logic
+        const webview = document.querySelector('webview') as Electron.WebviewTag;
+        if (webview && webview.canGoForward()) {
+            webview.goForward();
+        }
     };
 
     const handleHome = () => {
@@ -42,6 +60,7 @@ export default function HomePage() {
                         onBack={handleBack}
                         onForward={handleForward}
                         onHome={handleHome}
+                        isFullscreen={isFullscreen}
                     />
                 )}
             </nav>
