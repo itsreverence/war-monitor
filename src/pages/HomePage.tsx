@@ -14,46 +14,37 @@ export default function HomePage() {
     const hasWebView = location.pathname.startsWith('/web/') || location.pathname === '/support';
 
     useEffect(() => {
+        const handleFullscreenChange = () => {
+            setIsFullscreen(!!document.fullscreenElement);
+        };
+
+        document.addEventListener('fullscreenchange', handleFullscreenChange);
+
+        return () => {
+            document.removeEventListener('fullscreenchange', handleFullscreenChange);
+        };
+    }, []);
+
+    useEffect(() => {
         const webview = webviewRef.current;
         if (webview) {
             const handleExitFullscreen = () => {
                 setIsFullscreen(false);
             };
             webview.addEventListener('leave-full-screen', handleExitFullscreen);
-            document.addEventListener('fullscreenchange', () => {
-                setIsFullscreen(!!document.fullscreenElement);
-            });
             return () => {
                 webview.removeEventListener('leave-full-screen', handleExitFullscreen);
-                document.removeEventListener('fullscreenchange', () => {
-                    setIsFullscreen(!!document.fullscreenElement);
-                });
             };
         }
     }, []);
-
-    useEffect(() => {
-        const handleKeyDown = (event: KeyboardEvent) => {
-            if (event.key === 'Escape' && isFullscreen) {
-                exitFullscreen();
-            }
-        };
-
-        document.addEventListener('keydown', handleKeyDown);
-
-        return () => {
-            document.removeEventListener('keydown', handleKeyDown);
-        };
-    }, [isFullscreen]);
 
     const handleFullscreen = () => {
         const webview = webviewRef.current;
         if (webview) {
             if (!isFullscreen) {
                 webview.requestFullscreen();
-                setIsFullscreen(true);
             } else {
-                exitFullscreen();
+                document.exitFullscreen();
             }
         }
     };
