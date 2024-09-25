@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useTranslation } from "react-i18next";
 import { Button } from "@/components/ui/button";
 import { MenuIcon, ChevronDown, ChevronUp } from "lucide-react";
@@ -9,7 +9,7 @@ import {
     SheetHeader,
     SheetTitle,
 } from "@/components/ui/sheet";
-import { useParams, useLocation } from "react-router-dom";
+import { useParams, useLocation, useOutletContext } from "react-router-dom";
 import { useAdBlocker } from "@/hooks/useAdBlocker";
 
 const webOptions = {
@@ -39,6 +39,7 @@ export default function WebPage({ openSheetByDefault = false }: { openSheetByDef
     const [isSheetOpen, setIsSheetOpen] = useState(false);
     const [expandedCategories, setExpandedCategories] = useState<string[]>([]);
     const { isEnabled: isAdBlockerEnabled } = useAdBlocker();
+    const { webviewRef } = useOutletContext<{ webviewRef: React.RefObject<Electron.WebviewTag> }>();
 
     useEffect(() => {
         setIsSheetOpen(true);
@@ -109,6 +110,7 @@ export default function WebPage({ openSheetByDefault = false }: { openSheetByDef
             <div className="flex-grow">
                 {currentUrl ? (
                     <webview
+                        ref={webviewRef}
                         src={currentUrl}
                         style={{ width: "100%", height: "100%" }}
                         webpreferences={`contextIsolation=yes, nodeIntegration=no${isAdBlockerEnabled ? ", contentBlocking=true" : ""}`}

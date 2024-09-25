@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useTranslation } from "react-i18next";
 import { MainNavigationMenu } from "@/components/NavigationMenu";
 import { Outlet, useNavigate, useLocation } from "react-router-dom";
@@ -9,37 +9,72 @@ export default function HomePage() {
     const navigate = useNavigate();
     const location = useLocation();
     const [isFullscreen, setIsFullscreen] = useState(false);
+    const webviewRef = useRef<Electron.WebviewTag | null>(null);
 
     const hasWebView = location.pathname.startsWith('/web/') || location.pathname === '/support';
 
+    useEffect(() => {
+        const webview = webviewRef.current;
+        if (webview) {
+            const handleExitFullscreen = () => {
+                setIsFullscreen(false);
+            };
+            webview.addEventListener('leave-full-screen', handleExitFullscreen);
+            return () => {
+                webview.removeEventListener('leave-full-screen', handleExitFullscreen);
+            };
+        }
+    }, []);
+
+    useEffect(() => {
+        const handleKeyDown = (event: KeyboardEvent) => {
+            if (event.key === 'Escape' && isFullscreen) {
+                exitFullscreen();
+            }
+        };
+
+        document.addEventListener('keydown', handleKeyDown);
+
+        return () => {
+            document.removeEventListener('keydown', handleKeyDown);
+        };
+    }, [isFullscreen]);
+
     const handleFullscreen = () => {
-        setIsFullscreen(!isFullscreen);
-        const webview = document.querySelector('webview') as Electron.WebviewTag;
+        const webview = webviewRef.current;
         if (webview) {
             if (!isFullscreen) {
                 webview.requestFullscreen();
+                setIsFullscreen(true);
             } else {
-                document.exitFullscreen();
+                exitFullscreen();
             }
         }
     };
 
+    const exitFullscreen = () => {
+        if (document.fullscreenElement) {
+            document.exitFullscreen();
+        }
+        setIsFullscreen(false);
+    };
+
     const handleReload = () => {
-        const webview = document.querySelector('webview') as Electron.WebviewTag;
+        const webview = webviewRef.current;
         if (webview) {
             webview.reload();
         }
     };
 
     const handleBack = () => {
-        const webview = document.querySelector('webview') as Electron.WebviewTag;
+        const webview = webviewRef.current;
         if (webview && webview.canGoBack()) {
             webview.goBack();
         }
     };
 
     const handleForward = () => {
-        const webview = document.querySelector('webview') as Electron.WebviewTag;
+        const webview = webviewRef.current;
         if (webview && webview.canGoForward()) {
             webview.goForward();
         }
@@ -65,7 +100,7 @@ export default function HomePage() {
                 )}
             </nav>
             <main className="flex-grow overflow-hidden">
-                <Outlet />
+                <Outlet context={{ webviewRef }} />
             </main>
         </div>
     );
