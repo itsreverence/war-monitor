@@ -10,8 +10,14 @@ export default function HomePage() {
     const location = useLocation();
     const [isFullscreen, setIsFullscreen] = useState(false);
     const webviewRef = useRef<Electron.WebviewTag | null>(null);
+    const [initialUrl, setInitialUrl] = useState("");
+    const [isWebView, setIsWebView] = useState(false);
 
     const hasWebView = location.pathname.startsWith('/web/') || location.pathname === '/support';
+
+    useEffect(() => {
+        setIsWebView(hasWebView);
+    }, [location.pathname]);
 
     useEffect(() => {
         const handleFullscreenChange = () => {
@@ -78,7 +84,10 @@ export default function HomePage() {
     };
 
     const handleHome = () => {
-        navigate("/");
+        const webview = webviewRef.current;
+        if (webview && initialUrl) {
+            webview.loadURL(initialUrl);
+        }
     };
 
     return (
@@ -93,11 +102,13 @@ export default function HomePage() {
                         onForward={handleForward}
                         onHome={handleHome}
                         isFullscreen={isFullscreen}
+                        hasInitialUrl={!!initialUrl}
+                        isWebView={isWebView}
                     />
                 )}
             </nav>
             <main className="flex-grow overflow-hidden">
-                <Outlet context={{ webviewRef }} />
+                <Outlet context={{ webviewRef, setInitialUrl, setIsWebView }} />
             </main>
         </div>
     );

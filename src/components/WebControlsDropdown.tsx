@@ -17,6 +17,8 @@ interface WebControlsDropdownProps {
     onForward: () => void;
     onHome: () => void;
     isFullscreen: boolean;
+    hasInitialUrl: boolean;
+    isWebView: boolean;
 }
 
 export function WebControlsDropdown({
@@ -25,7 +27,9 @@ export function WebControlsDropdown({
     onBack,
     onForward,
     onHome,
-    isFullscreen
+    isFullscreen,
+    hasInitialUrl,
+    isWebView
 }: WebControlsDropdownProps) {
     const { t } = useTranslation();
     const navigate = useNavigate();
@@ -52,7 +56,7 @@ export function WebControlsDropdown({
                     <ArrowRight className="mr-2 h-4 w-4" />
                     <span>{t("nav.web.forward")}</span>
                 </DropdownMenuItem>
-                <DropdownMenuItem onClick={onHome}>
+                <DropdownMenuItem onClick={onHome} disabled={!hasInitialUrl || !isWebView}>
                     <Home className="mr-2 h-4 w-4" />
                     <span>{t("nav.web.home")}</span>
                 </DropdownMenuItem>

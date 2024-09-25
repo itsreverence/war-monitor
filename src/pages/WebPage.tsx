@@ -39,7 +39,11 @@ export default function WebPage({ openSheetByDefault = false }: { openSheetByDef
     const [isSheetOpen, setIsSheetOpen] = useState(false);
     const [expandedCategories, setExpandedCategories] = useState<string[]>([]);
     const { isEnabled: isAdBlockerEnabled } = useAdBlocker();
-    const { webviewRef } = useOutletContext<{ webviewRef: React.RefObject<Electron.WebviewTag> }>();
+    const { webviewRef, setInitialUrl, setIsWebView } = useOutletContext<{ 
+        webviewRef: React.RefObject<Electron.WebviewTag>,
+        setInitialUrl: React.Dispatch<React.SetStateAction<string>>,
+        setIsWebView: React.Dispatch<React.SetStateAction<boolean>>
+    }>();
 
     useEffect(() => {
         setIsSheetOpen(true);
@@ -54,6 +58,8 @@ export default function WebPage({ openSheetByDefault = false }: { openSheetByDef
 
     const handleOptionClick = (url: string) => {
         setCurrentUrl(url);
+        setInitialUrl(url);
+        setIsWebView(true);
         setIsSheetOpen(false);
     };
 
