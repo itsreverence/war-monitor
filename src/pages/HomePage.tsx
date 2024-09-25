@@ -20,8 +20,14 @@ export default function HomePage() {
                 setIsFullscreen(false);
             };
             webview.addEventListener('leave-full-screen', handleExitFullscreen);
+            document.addEventListener('fullscreenchange', () => {
+                setIsFullscreen(!!document.fullscreenElement);
+            });
             return () => {
                 webview.removeEventListener('leave-full-screen', handleExitFullscreen);
+                document.removeEventListener('fullscreenchange', () => {
+                    setIsFullscreen(!!document.fullscreenElement);
+                });
             };
         }
     }, []);
