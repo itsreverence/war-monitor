@@ -13,6 +13,7 @@ import { useParams, useLocation, useOutletContext } from "react-router-dom";
 import { useAdBlocker } from "@/hooks/useAdBlocker";
 import { Tab } from "@/types";
 import { TabBar } from "@/components/TabBar";
+import { MultiPageView } from "@/components/MultiPageView";
 
 const webOptions = {
     search: [
@@ -42,10 +43,12 @@ export default function WebPage({ openSheetByDefault = false }: { openSheetByDef
     const [isSheetOpen, setIsSheetOpen] = useState(false);
     const [expandedCategories, setExpandedCategories] = useState<string[]>([]);
     const { isEnabled: isAdBlockerEnabled } = useAdBlocker();
-    const { webviewRef, setIsWebView, isTabView } = useOutletContext<{ 
+    const { webviewRef, setIsWebView, isTabView, viewMode, setViewMode } = useOutletContext<{ 
         webviewRef: React.RefObject<Electron.WebviewTag>,
         setIsWebView: React.Dispatch<React.SetStateAction<boolean>>,
-        isTabView: boolean
+        isTabView: boolean,
+        viewMode: 'single' | 'tab' | 'multi',
+        setViewMode: React.Dispatch<React.SetStateAction<'single' | 'tab' | 'multi'>>
     }>();
     const [initialUrl, setInitialUrl] = useState("");
 
@@ -167,7 +170,7 @@ export default function WebPage({ openSheetByDefault = false }: { openSheetByDef
                     </div>
                 </SheetContent>
             </Sheet>
-            {isTabView && (
+            {viewMode === 'tab' && (
                 <TabBar
                     tabs={tabs}
                     activeTabId={activeTabId}
@@ -177,7 +180,15 @@ export default function WebPage({ openSheetByDefault = false }: { openSheetByDef
                 />
             )}
             <div className="flex-grow">
-                {isTabView ? (
+                {viewMode === 'single' && (
+                    <webview
+                        ref={webviewRef}
+                        src={initialUrl}
+                        style={{ width: "100%", height: "100%" }}
+                        webpreferences={`contextIsolation=yes, nodeIntegration=no${isAdBlockerEnabled ? ", contentBlocking=true" : ""}`}
+                    ></webview>
+                )}
+                {viewMode === 'tab' && (
                     activeTabId ? (
                         <webview
                             ref={webviewRef}
@@ -190,13 +201,14 @@ export default function WebPage({ openSheetByDefault = false }: { openSheetByDef
                             {t("nav.web.selectOption")}
                         </div>
                     )
-                ) : (
-                    <webview
-                        ref={webviewRef}
-                        src={initialUrl}
-                        style={{ width: "100%", height: "100%" }}
-                        webpreferences={`contextIsolation=yes, nodeIntegration=no${isAdBlockerEnabled ? ", contentBlocking=true" : ""}`}
-                    ></webview>
+                )}
+                {viewMode === 'multi' && (
+                    <MultiPageView
+                        tabs={tabs}
+                        onAddTab={() => addNewTab("about:blank")}
+                        onCloseTab={closeTab}
+                        isAdBlockerEnabled={isAdBlockerEnabled}
+                    />
                 )}
             </div>
         </div>

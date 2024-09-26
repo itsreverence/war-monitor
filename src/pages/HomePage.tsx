@@ -14,6 +14,7 @@ export default function HomePage() {
     const [isWebView, setIsWebView] = useState(false);
     const [activeTabId, setActiveTabId] = useState<string | null>(null);
     const [isTabView, setIsTabView] = useState(false);
+    const [viewMode, setViewMode] = useState<'single' | 'tab' | 'multi'>('single');
 
     const hasWebView = location.pathname.startsWith('/web/') || location.pathname === '/support';
 
@@ -96,11 +97,15 @@ export default function HomePage() {
         setIsTabView(prev => !prev);
     };
 
+    const handleChangeViewMode = (mode: 'single' | 'tab' | 'multi') => {
+        setViewMode(mode);
+    };
+
     return (
         <div className="flex h-screen flex-col">
             <nav className="bg-background p-4 flex justify-between items-center">
                 <MainNavigationMenu />
-                {hasWebView && (
+                {isWebView && (
                     <WebControlsDropdown
                         onFullscreen={handleFullscreen}
                         onReload={handleReload}
@@ -110,13 +115,14 @@ export default function HomePage() {
                         isFullscreen={isFullscreen}
                         hasInitialUrl={!!initialUrl}
                         isWebView={isWebView}
-                        isTabView={isTabView}
-                        onToggleView={handleToggleView}
+                        viewMode={viewMode}
+                        onChangeViewMode={handleChangeViewMode}
+                        isSupportPage={location.pathname === '/support'}
                     />
                 )}
             </nav>
             <main className="flex-grow overflow-hidden">
-                <Outlet context={{ webviewRef, setInitialUrl, setIsWebView, isTabView }} />
+                <Outlet context={{ webviewRef, setInitialUrl, setIsWebView, isTabView, viewMode, setViewMode }} />
             </main>
         </div>
     );

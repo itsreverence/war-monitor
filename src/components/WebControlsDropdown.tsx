@@ -19,8 +19,9 @@ interface WebControlsDropdownProps {
     isFullscreen: boolean;
     hasInitialUrl: boolean;
     isWebView: boolean;
-    isTabView: boolean;
-    onToggleView: () => void;
+    viewMode: 'single' | 'tab' | 'multi';
+    onChangeViewMode: (mode: 'single' | 'tab' | 'multi') => void;
+    isSupportPage: boolean;
 }
 
 export function WebControlsDropdown({
@@ -32,8 +33,9 @@ export function WebControlsDropdown({
     isFullscreen,
     hasInitialUrl,
     isWebView,
-    isTabView,
-    onToggleView,
+    viewMode,
+    onChangeViewMode,
+    isSupportPage,
 }: WebControlsDropdownProps) {
     const { t } = useTranslation();
     const navigate = useNavigate();
@@ -66,9 +68,19 @@ export function WebControlsDropdown({
                     <Home className="mr-2 h-4 w-4" />
                     <span>{t("nav.web.home")}</span>
                 </DropdownMenuItem>
-                <DropdownMenuItem onClick={onToggleView}>
-                    {isTabView ? "Switch to Single Page" : "Switch to Tab View"}
-                </DropdownMenuItem>
+                {!isSupportPage && (
+                    <>
+                        <DropdownMenuItem onClick={() => onChangeViewMode('single')}>
+                            Switch to Single Page
+                        </DropdownMenuItem>
+                        <DropdownMenuItem onClick={() => onChangeViewMode('tab')}>
+                            Switch to Tab View
+                        </DropdownMenuItem>
+                        <DropdownMenuItem onClick={() => onChangeViewMode('multi')}>
+                            Switch to Multi Page
+                        </DropdownMenuItem>
+                    </>
+                )}
             </DropdownMenuContent>
         </DropdownMenu>
     );
