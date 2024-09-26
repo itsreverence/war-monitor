@@ -15,6 +15,7 @@ export default function HomePage() {
     const [activeTabId, setActiveTabId] = useState<string | null>(null);
     const [isTabView, setIsTabView] = useState(false);
     const [viewMode, setViewMode] = useState<'single' | 'tab' | 'multi'>('single');
+    const [multiPageLayout, setMultiPageLayout] = useState<'horizontal' | 'vertical'>('vertical');
 
     const hasWebView = location.pathname.startsWith('/web/') || location.pathname === '/support';
 
@@ -101,6 +102,10 @@ export default function HomePage() {
         setViewMode(mode);
     };
 
+    const toggleMultiPageLayout = () => {
+        setMultiPageLayout(prev => prev === 'vertical' ? 'horizontal' : 'vertical');
+    };
+
     return (
         <div className="flex h-screen flex-col">
             <nav className="bg-background p-4 flex justify-between items-center">
@@ -118,11 +123,13 @@ export default function HomePage() {
                         viewMode={viewMode}
                         onChangeViewMode={handleChangeViewMode}
                         isSupportPage={location.pathname === '/support'}
+                        onToggleMultiPageLayout={toggleMultiPageLayout}
+                        multiPageLayout={multiPageLayout}
                     />
                 )}
             </nav>
             <main className="flex-grow overflow-hidden">
-                <Outlet context={{ webviewRef, setInitialUrl, setIsWebView, isTabView, viewMode, setViewMode }} />
+                <Outlet context={{ webviewRef, setInitialUrl, setIsWebView, viewMode, setViewMode, multiPageLayout }} />
             </main>
         </div>
     );

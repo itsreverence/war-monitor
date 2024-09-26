@@ -6,7 +6,7 @@ import {
     DropdownMenuItem,
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Maximize, RotateCw, ArrowLeft, ArrowRight, Home, MenuIcon } from "lucide-react";
+import { Maximize, RotateCw, ArrowLeft, ArrowRight, Home, MenuIcon, FlipHorizontal, FlipVertical } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 
@@ -22,6 +22,8 @@ interface WebControlsDropdownProps {
     viewMode: 'single' | 'tab' | 'multi';
     onChangeViewMode: (mode: 'single' | 'tab' | 'multi') => void;
     isSupportPage: boolean;
+    onToggleMultiPageLayout: () => void;
+    multiPageLayout: 'horizontal' | 'vertical';
 }
 
 export function WebControlsDropdown({
@@ -36,6 +38,8 @@ export function WebControlsDropdown({
     viewMode,
     onChangeViewMode,
     isSupportPage,
+    onToggleMultiPageLayout,
+    multiPageLayout,
 }: WebControlsDropdownProps) {
     const { t } = useTranslation();
     const navigate = useNavigate();
@@ -79,6 +83,12 @@ export function WebControlsDropdown({
                         <DropdownMenuItem onClick={() => onChangeViewMode('multi')}>
                             Switch to Multi Page
                         </DropdownMenuItem>
+                        {viewMode === 'multi' && (
+                            <DropdownMenuItem onClick={onToggleMultiPageLayout}>
+                                {multiPageLayout === 'vertical' ? <FlipHorizontal className="mr-2 h-4 w-4" /> : <FlipVertical className="mr-2 h-4 w-4" />}
+                                <span>{multiPageLayout === 'vertical' ? 'Split Horizontally' : 'Split Vertically'}</span>
+                            </DropdownMenuItem>
+                        )}
                     </>
                 )}
             </DropdownMenuContent>

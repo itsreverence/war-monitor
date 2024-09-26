@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { Button } from "@/components/ui/button";
 import { MenuIcon, ChevronDown, ChevronUp, Plus } from "lucide-react";
@@ -45,27 +45,22 @@ export default function WebPage({ openSheetByDefault = false }: { openSheetByDef
     const [isSheetOpen, setIsSheetOpen] = useState(false);
     const [expandedCategories, setExpandedCategories] = useState<string[]>([]);
     const { isEnabled: isAdBlockerEnabled } = useAdBlocker();
-    const { webviewRef, setIsWebView, isTabView, viewMode, setViewMode } = useOutletContext<{ 
+    const { webviewRef, setIsWebView, viewMode, setViewMode, multiPageLayout } = useOutletContext<{ 
         webviewRef: React.RefObject<Electron.WebviewTag>,
         setIsWebView: React.Dispatch<React.SetStateAction<boolean>>,
-        isTabView: boolean,
         viewMode: 'single' | 'tab' | 'multi',
-        setViewMode: React.Dispatch<React.SetStateAction<'single' | 'tab' | 'multi'>>
+        setViewMode: React.Dispatch<React.SetStateAction<'single' | 'tab' | 'multi'>>,
+        multiPageLayout: 'horizontal' | 'vertical'
     }>();
     const [initialUrl, setInitialUrl] = useState("");
-    const [layout, setLayout] = useState<number[]>([]);
     const [webOptions, setWebOptions] = useState<Record<string, { name: string; url: string }[]>>(initialWebOptions);
 
     useEffect(() => {
-        setIsSheetOpen(true);
+        setIsSheetOpen(openSheetByDefault);
         if (category) {
             setExpandedCategories([category]);
         }
-    }, [category, location.state]);
-
-    useEffect(() => {
-        setIsSheetOpen(openSheetByDefault);
-    }, [openSheetByDefault]);
+    }, [category, location.state, openSheetByDefault]);
 
     useEffect(() => {
         const webview = webviewRef.current;
@@ -97,14 +92,7 @@ export default function WebPage({ openSheetByDefault = false }: { openSheetByDef
             url: url,
             title: new URL(url).hostname,
         };
-        setTabs(prevTabs => {
-            const updatedTabs = [...prevTabs, newTab];
-            if (viewMode === 'multi') {
-                const newLayout = updatedTabs.map(() => 100 / updatedTabs.length);
-                setLayout(newLayout);
-            }
-            return updatedTabs;
-        });
+        setTabs(prevTabs => [...prevTabs, newTab]);
         setActiveTabId(newTab.id);
         setInitialUrl(url);
         setIsWebView(true);
@@ -229,6 +217,7 @@ export default function WebPage({ openSheetByDefault = false }: { openSheetByDef
                         tabs={tabs}
                         onCloseTab={closeTab}
                         isAdBlockerEnabled={isAdBlockerEnabled}
+                        layoutDirection={multiPageLayout}
                     />
                 )}
             </div>

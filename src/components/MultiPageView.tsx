@@ -7,21 +7,22 @@ interface MultiPageViewProps {
     tabs: Tab[];
     onCloseTab: (tabId: string) => void;
     isAdBlockerEnabled: boolean;
+    layoutDirection: 'horizontal' | 'vertical';
 }
 
-export function MultiPageView({ tabs, onCloseTab, isAdBlockerEnabled }: MultiPageViewProps) {
-    const [layout, setLayout] = useState<number[]>([]);
+export function MultiPageView({ tabs, onCloseTab, isAdBlockerEnabled, layoutDirection }: MultiPageViewProps) {
+    const [sizes, setSizes] = useState<number[]>([]);
 
     useEffect(() => {
         const newLayout = tabs.map(() => 100 / tabs.length);
-        setLayout(newLayout);
+        setSizes(newLayout);
     }, [tabs.length]);
 
     return (
-        <ResizablePanelGroup direction="horizontal" onLayout={(sizes) => setLayout(sizes)}>
+        <ResizablePanelGroup direction={layoutDirection} onLayout={(newSizes) => setSizes(newSizes)}>
             {tabs.map((tab, index) => (
                 <React.Fragment key={tab.id}>
-                    <ResizablePanel defaultSize={layout[index]} minSize={20}>
+                    <ResizablePanel defaultSize={sizes[index]} minSize={20}>
                         <div className="flex flex-col h-full">
                             <div className="flex justify-between items-center p-2 bg-secondary">
                                 <span>{tab.title}</span>
