@@ -12,6 +12,7 @@ import { useTranslation } from "react-i18next";
 import "./localization/i18n";
 import { updateAppLanguage } from "./helpers/language_helpers";
 import WebPage from "./pages/WebPage";
+import { WebProvider } from '@/contexts/WebContext';
 
 export default function App() {
     const { i18n } = useTranslation();
@@ -47,7 +48,11 @@ function WebPageWrapper() {
     const location = useLocation();
     const state = location.state as { openSheetByDefault?: boolean } | null;
     const openSheetByDefault = state?.openSheetByDefault || false;
-    return <WebPage openSheetByDefault={openSheetByDefault} />;
+    return (
+        <WebProvider>
+            <WebPage openSheetByDefault={openSheetByDefault} />
+        </WebProvider>
+    );
 }
 
 const root = createRoot(document.getElementById("app")!);

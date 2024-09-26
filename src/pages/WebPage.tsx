@@ -15,6 +15,7 @@ import { Tab } from "@/types";
 import { TabBar } from "@/components/TabBar";
 import { MultiPageView } from "@/components/MultiPageView";
 import { AddCustomSourceDialog } from "@/components/AddCustomSourceDialog";
+import { useWebContext } from '@/contexts/WebContext';
 
 const initialWebOptions = {
     search: [
@@ -53,7 +54,7 @@ export default function WebPage({ openSheetByDefault = false }: { openSheetByDef
         multiPageLayout: 'horizontal' | 'vertical'
     }>();
     const [initialUrl, setInitialUrl] = useState("");
-    const [webOptions, setWebOptions] = useState<Record<string, { name: string; url: string }[]>>(initialWebOptions);
+    const { webOptions } = useWebContext();
 
     useEffect(() => {
         setIsSheetOpen(openSheetByDefault);
@@ -125,13 +126,6 @@ export default function WebPage({ openSheetByDefault = false }: { openSheetByDef
         ));
     };
 
-    const addCustomSource = (name: string, url: string, category: string) => {
-        setWebOptions(prevOptions => ({
-            ...prevOptions,
-            [category]: [...(prevOptions[category] || []), { name, url }]
-        }));
-    };
-
     return (
         <div className="flex h-full w-full flex-col">
             <Sheet open={isSheetOpen} onOpenChange={setIsSheetOpen}>
@@ -159,7 +153,7 @@ export default function WebPage({ openSheetByDefault = false }: { openSheetByDef
                                 </Button>
                                 {expandedCategories.includes(cat) && (
                                     <div className="pl-4 space-y-2">
-                                        {options.map((option: { name: string; url: string }) => (
+                                        {options.map((option) => (
                                             <Button
                                                 key={option.name}
                                                 variant="ghost"
@@ -174,10 +168,6 @@ export default function WebPage({ openSheetByDefault = false }: { openSheetByDef
                             </div>
                         ))}
                     </div>
-                    <AddCustomSourceDialog 
-                        onAddSource={addCustomSource} 
-                        categories={['search', 'information', 'verification', 'translation', 'other']}
-                    />
                 </SheetContent>
             </Sheet>
             {viewMode === 'tab' && (
