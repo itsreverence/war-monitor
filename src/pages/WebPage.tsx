@@ -42,11 +42,12 @@ export default function WebPage({ openSheetByDefault = false }: { openSheetByDef
     const [isSheetOpen, setIsSheetOpen] = useState(false);
     const [expandedCategories, setExpandedCategories] = useState<string[]>([]);
     const { isEnabled: isAdBlockerEnabled } = useAdBlocker();
-    const { webviewRef, setInitialUrl, setIsWebView } = useOutletContext<{ 
+    const { webviewRef, setIsWebView, isTabView } = useOutletContext<{ 
         webviewRef: React.RefObject<Electron.WebviewTag>,
-        setInitialUrl: React.Dispatch<React.SetStateAction<string>>,
-        setIsWebView: React.Dispatch<React.SetStateAction<boolean>>
+        setIsWebView: React.Dispatch<React.SetStateAction<boolean>>,
+        isTabView: boolean
     }>();
+    const [initialUrl, setInitialUrl] = useState("");
 
     useEffect(() => {
         setIsSheetOpen(true);
@@ -147,25 +148,36 @@ export default function WebPage({ openSheetByDefault = false }: { openSheetByDef
                     </div>
                 </SheetContent>
             </Sheet>
-            <TabBar
-                tabs={tabs}
-                activeTabId={activeTabId}
-                onTabClose={closeTab}
-                onTabSwitch={switchTab}
-                onNewTab={() => addNewTab("about:blank")}
-            />
+            {isTabView && (
+                <TabBar
+                    tabs={tabs}
+                    activeTabId={activeTabId}
+                    onTabClose={closeTab}
+                    onTabSwitch={switchTab}
+                    onNewTab={() => addNewTab("about:blank")}
+                />
+            )}
             <div className="flex-grow">
-                {activeTabId ? (
+                {isTabView ? (
+                    activeTabId ? (
+                        <webview
+                            ref={webviewRef}
+                            src={tabs.find(t => t.id === activeTabId)?.url || ""}
+                            style={{ width: "100%", height: "100%" }}
+                            webpreferences={`contextIsolation=yes, nodeIntegration=no${isAdBlockerEnabled ? ", contentBlocking=true" : ""}`}
+                        ></webview>
+                    ) : (
+                        <div className="flex h-full w-full items-center justify-center text-muted-foreground">
+                            {t("nav.web.selectOption")}
+                        </div>
+                    )
+                ) : (
                     <webview
                         ref={webviewRef}
-                        src={tabs.find(t => t.id === activeTabId)?.url || ""}
+                        src={initialUrl}
                         style={{ width: "100%", height: "100%" }}
                         webpreferences={`contextIsolation=yes, nodeIntegration=no${isAdBlockerEnabled ? ", contentBlocking=true" : ""}`}
                     ></webview>
-                ) : (
-                    <div className="flex h-full w-full items-center justify-center text-muted-foreground">
-                        {t("nav.web.selectOption")}
-                    </div>
                 )}
             </div>
         </div>

@@ -6,7 +6,7 @@ import {
     DropdownMenuItem,
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Maximize, RotateCw, ArrowLeft, ArrowRight, Home } from "lucide-react";
+import { Maximize, RotateCw, ArrowLeft, ArrowRight, Home, MenuIcon } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 
@@ -19,6 +19,8 @@ interface WebControlsDropdownProps {
     isFullscreen: boolean;
     hasInitialUrl: boolean;
     isWebView: boolean;
+    isTabView: boolean;
+    onToggleView: () => void;
 }
 
 export function WebControlsDropdown({
@@ -29,7 +31,9 @@ export function WebControlsDropdown({
     onHome,
     isFullscreen,
     hasInitialUrl,
-    isWebView
+    isWebView,
+    isTabView,
+    onToggleView,
 }: WebControlsDropdownProps) {
     const { t } = useTranslation();
     const navigate = useNavigate();
@@ -37,9 +41,11 @@ export function WebControlsDropdown({
     return (
         <DropdownMenu>
             <DropdownMenuTrigger asChild>
-                <Button variant="outline">{t("nav.web.controls")}</Button>
+                <Button variant="outline" size="icon">
+                    <MenuIcon className="h-[1.2rem] w-[1.2rem]" />
+                </Button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent>
+            <DropdownMenuContent align="end">
                 <DropdownMenuItem onClick={onFullscreen}>
                     <Maximize className="mr-2 h-4 w-4" />
                     <span>{isFullscreen ? t("nav.web.exitFullscreen") : t("nav.web.fullscreen")}</span>
@@ -59,6 +65,9 @@ export function WebControlsDropdown({
                 <DropdownMenuItem onClick={onHome} disabled={!hasInitialUrl || !isWebView}>
                     <Home className="mr-2 h-4 w-4" />
                     <span>{t("nav.web.home")}</span>
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={onToggleView}>
+                    {isTabView ? "Switch to Single Page" : "Switch to Tab View"}
                 </DropdownMenuItem>
             </DropdownMenuContent>
         </DropdownMenu>
