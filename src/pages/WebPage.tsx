@@ -60,6 +60,19 @@ export default function WebPage({ openSheetByDefault = false }: { openSheetByDef
         setIsSheetOpen(openSheetByDefault);
     }, [openSheetByDefault]);
 
+    useEffect(() => {
+        const webview = webviewRef.current;
+        if (webview && activeTabId) {
+            const handleFinishLoad = () => {
+                updateTabTitle(activeTabId, webview.getTitle());
+            };
+            webview.addEventListener('did-finish-load', handleFinishLoad);
+            return () => {
+                webview.removeEventListener('did-finish-load', handleFinishLoad);
+            };
+        }
+    }, [activeTabId, webviewRef]);
+
     const handleOptionClick = (url: string) => {
         addNewTab(url);
         setIsSheetOpen(false);
@@ -75,7 +88,7 @@ export default function WebPage({ openSheetByDefault = false }: { openSheetByDef
         const newTab: Tab = {
             id: Date.now().toString(),
             url: url,
-            title: "New Tab",
+            title: new URL(url).hostname,
         };
         setTabs(prevTabs => [...prevTabs, newTab]);
         setActiveTabId(newTab.id);
@@ -102,6 +115,12 @@ export default function WebPage({ openSheetByDefault = false }: { openSheetByDef
         if (tab) {
             setInitialUrl(tab.url);
         }
+    };
+
+    const updateTabTitle = (tabId: string, newTitle: string) => {
+        setTabs(prevTabs => prevTabs.map(tab => 
+            tab.id === tabId ? { ...tab, title: newTitle } : tab
+        ));
     };
 
     return (
