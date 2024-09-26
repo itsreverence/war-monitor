@@ -1,18 +1,21 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { ResizablePanelGroup, ResizablePanel, ResizableHandle } from '@/components/ui/resizable';
 import { Button } from '@/components/ui/button';
-import { Plus } from 'lucide-react';
 import { Tab } from "@/types";
 
 interface MultiPageViewProps {
     tabs: Tab[];
-    onAddTab: () => void;
     onCloseTab: (tabId: string) => void;
     isAdBlockerEnabled: boolean;
 }
 
-export function MultiPageView({ tabs, onAddTab, onCloseTab, isAdBlockerEnabled }: MultiPageViewProps) {
-    const [layout, setLayout] = useState([50, 50]);
+export function MultiPageView({ tabs, onCloseTab, isAdBlockerEnabled }: MultiPageViewProps) {
+    const [layout, setLayout] = useState<number[]>([]);
+
+    useEffect(() => {
+        const newLayout = tabs.map(() => 100 / tabs.length);
+        setLayout(newLayout);
+    }, [tabs.length]);
 
     return (
         <ResizablePanelGroup direction="horizontal" onLayout={(sizes) => setLayout(sizes)}>
@@ -36,15 +39,6 @@ export function MultiPageView({ tabs, onAddTab, onCloseTab, isAdBlockerEnabled }
                     {index < tabs.length - 1 && <ResizableHandle />}
                 </React.Fragment>
             ))}
-            {tabs.length < 4 && (
-                <ResizablePanel defaultSize={layout[tabs.length]}>
-                    <div className="flex items-center justify-center h-full">
-                        <Button onClick={onAddTab}>
-                            <Plus className="mr-2 h-4 w-4" /> Add Page
-                        </Button>
-                    </div>
-                </ResizablePanel>
-            )}
         </ResizablePanelGroup>
     );
 }

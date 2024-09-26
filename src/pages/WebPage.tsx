@@ -97,6 +97,9 @@ export default function WebPage({ openSheetByDefault = false }: { openSheetByDef
         setActiveTabId(newTab.id);
         setInitialUrl(url);
         setIsWebView(true);
+        if (viewMode === 'multi') {
+            setViewMode('multi'); // This will trigger a re-render and adjust the layout
+        }
     };
 
     const closeTab = (tabId: string) => {
@@ -205,7 +208,6 @@ export default function WebPage({ openSheetByDefault = false }: { openSheetByDef
                 {viewMode === 'multi' && (
                     <MultiPageView
                         tabs={tabs}
-                        onAddTab={() => addNewTab("about:blank")}
                         onCloseTab={closeTab}
                         isAdBlockerEnabled={isAdBlockerEnabled}
                     />
