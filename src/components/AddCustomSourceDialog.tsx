@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -13,38 +13,73 @@ import {
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useTranslation } from "react-i18next";
 
-interface AddCustomSourceDialogProps {
-    onAddSource: (name: string, url: string, category: string) => void;
-    categories: string[];
+export interface CustomSource {
+    name: string;
+    url: string;
+    category: string;
 }
 
-export function AddCustomSourceDialog({ onAddSource, categories }: AddCustomSourceDialogProps) {
+interface AddEditCustomSourceDialogProps {
+    onAddSource: (name: string, url: string, category: string) => void;
+    onEditSource: (oldName: string, name: string, url: string, category: string) => void;
+    categories: string[];
+    editingSource?: CustomSource;
+    isOpen?: boolean;
+    onOpenChange?: (isOpen: boolean) => void;
+}
+
+export function AddEditCustomSourceDialog({ 
+    onAddSource, 
+    onEditSource, 
+    categories, 
+    editingSource,
+    isOpen,
+    onOpenChange
+}: AddEditCustomSourceDialogProps) {
     const [name, setName] = useState('');
     const [url, setUrl] = useState('');
     const [category, setCategory] = useState('other');
-    const [isOpen, setIsOpen] = useState(false);
     const { t } = useTranslation();
 
-    const handleSubmit = () => {
-        if (name && url) {
-            onAddSource(name, url, category);
+    useEffect(() => {
+        if (editingSource) {
+            setName(editingSource.name);
+            setUrl(editingSource.url);
+            setCategory(editingSource.category);
+        } else {
             setName('');
             setUrl('');
             setCategory('other');
-            setIsOpen(false);
+        }
+    }, [editingSource]);
+
+    const handleSubmit = () => {
+        if (name && url) {
+            if (editingSource) {
+                onEditSource(editingSource.name, name, url, category);
+            } else {
+                onAddSource(name, url, category);
+            }
+            if (onOpenChange) onOpenChange(false);
         }
     };
 
     return (
-        <Dialog open={isOpen} onOpenChange={setIsOpen}>
-            <DialogTrigger asChild>
-                <Button variant="outline">{t("nav.web.addCustomSource")}</Button>
-            </DialogTrigger>
+        <Dialog open={isOpen} onOpenChange={onOpenChange}>
+            {!editingSource && (
+                <DialogTrigger asChild>
+                    <Button variant="outline">
+                        {t("nav.web.addCustomSource")}
+                    </Button>
+                </DialogTrigger>
+            )}
             <DialogContent className="sm:max-w-[425px]">
                 <DialogHeader>
-                    <DialogTitle>{t("nav.web.addCustomSource")}</DialogTitle>
+                    <DialogTitle>
+                        {editingSource ? t("nav.web.editCustomSource") : t("nav.web.addCustomSource")}
+                    </DialogTitle>
                     <DialogDescription>
-                        {t("nav.web.addCustomSourceDescription")}
+                        {editingSource ? t("nav.web.editCustomSourceDescription") : t("nav.web.addCustomSourceDescription")}
                     </DialogDescription>
                 </DialogHeader>
                 <div className="grid gap-4 py-4">
@@ -72,7 +107,9 @@ export function AddCustomSourceDialog({ onAddSource, categories }: AddCustomSour
                     </Select>
                 </div>
                 <DialogFooter>
-                    <Button onClick={handleSubmit}>{t("nav.web.addSource")}</Button>
+                    <Button onClick={handleSubmit}>
+                        {editingSource ? t("nav.web.saveChanges") : t("nav.web.addSource")}
+                    </Button>
                 </DialogFooter>
             </DialogContent>
         </Dialog>

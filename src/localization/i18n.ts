@@ -36,6 +36,10 @@ i18n.use(initReactI18next).init({
                         addSource: "Add Source",
                         other: "Other",
                         selectCategory: "Select Category",
+                        editCustomSource: "Edit Custom Source",
+                        editCustomSourceDescription: "Modify the details of your custom source",
+                        saveChanges: "Save Changes",
+                        edit: "Edit",
                     },
                     settings: {
                         title: "Settings",
@@ -86,6 +90,10 @@ i18n.use(initReactI18next).init({
                         addSource: "Adicionar Fonte",
                         other: "Outros",
                         selectCategory: "Selecione a Categoria",
+                        editCustomSource: "Editar Fonte Personalizada",
+                        editCustomSourceDescription: "Modifique os detalhes da sua fonte personalizada",
+                        saveChanges: "Salvar Alterações",
+                        edit: "Editar",
                     },
                     settings: {
                         title: "Configurações",

@@ -25,20 +25,22 @@ export default function App() {
     return (
         <Router>
             <BaseLayout>
-                <Routes>
-                    <Route path="/" element={<HomePage />}>
-                        <Route index element={<HomeContent />} />
-                        <Route path="support" element={<SupportPage />} />
-                        <Route path="settings/general" element={<GeneralSettingsPage />} />
-                        <Route path="settings/web" element={<WebSettingsPage />} />
-                        <Route
-                            path="web/:category"
-                            element={
-                                <WebPageWrapper />
-                            }
-                        />
-                    </Route>
-                </Routes>
+                <WebProvider>
+                    <Routes>
+                        <Route path="/" element={<HomePage />}>
+                            <Route index element={<HomeContent />} />
+                            <Route path="support" element={<SupportPage />} />
+                            <Route path="settings/general" element={<GeneralSettingsPage />} />
+                            <Route path="settings/web" element={<WebSettingsPage />} />
+                            <Route
+                                path="web/:category"
+                                element={
+                                    <WebPageWrapper />
+                                }
+                            />
+                        </Route>
+                    </Routes>
+                </WebProvider>
             </BaseLayout>
         </Router>
     );

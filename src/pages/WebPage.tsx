@@ -14,28 +14,7 @@ import { useAdBlocker } from "@/hooks/useAdBlocker";
 import { Tab } from "@/types";
 import { TabBar } from "@/components/TabBar";
 import { MultiPageView } from "@/components/MultiPageView";
-import { AddCustomSourceDialog } from "@/components/AddCustomSourceDialog";
 import { useWebContext } from '@/contexts/WebContext';
-
-const initialWebOptions = {
-    search: [
-        { name: "Google", url: "https://www.google.com" },
-        { name: "Bing", url: "https://www.bing.com" },
-    ],
-    information: [
-        { name: "Wikipedia", url: "https://www.wikipedia.org" },
-        { name: "Britannica", url: "https://www.britannica.com" },
-    ],
-    verification: [
-        { name: "Snopes", url: "https://www.snopes.com" },
-        { name: "FactCheck.org", url: "https://www.factcheck.org" },
-    ],
-    translation: [
-        { name: "Google Translate", url: "https://translate.google.com" },
-        { name: "DeepL", url: "https://www.deepl.com/translator" },
-    ],
-    other: [],
-};
 
 export default function WebPage({ openSheetByDefault = false }: { openSheetByDefault?: boolean }) {
     const { t } = useTranslation();
