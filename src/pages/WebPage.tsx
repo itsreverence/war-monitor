@@ -14,8 +14,9 @@ import { useAdBlocker } from "@/hooks/useAdBlocker";
 import { Tab } from "@/types";
 import { TabBar } from "@/components/TabBar";
 import { MultiPageView } from "@/components/MultiPageView";
+import { AddCustomSourceDialog } from "@/components/AddCustomSourceDialog";
 
-const webOptions = {
+const initialWebOptions = {
     search: [
         { name: "Google", url: "https://www.google.com" },
         { name: "Bing", url: "https://www.bing.com" },
@@ -32,6 +33,7 @@ const webOptions = {
         { name: "Google Translate", url: "https://translate.google.com" },
         { name: "DeepL", url: "https://www.deepl.com/translator" },
     ],
+    custom: [],
 };
 
 export default function WebPage({ openSheetByDefault = false }: { openSheetByDefault?: boolean }) {
@@ -52,6 +54,7 @@ export default function WebPage({ openSheetByDefault = false }: { openSheetByDef
     }>();
     const [initialUrl, setInitialUrl] = useState("");
     const [layout, setLayout] = useState<number[]>([]);
+    const [webOptions, setWebOptions] = useState<Record<string, { name: string; url: string }[]>>(initialWebOptions);
 
     useEffect(() => {
         setIsSheetOpen(true);
@@ -134,6 +137,13 @@ export default function WebPage({ openSheetByDefault = false }: { openSheetByDef
         ));
     };
 
+    const addCustomSource = (name: string, url: string) => {
+        setWebOptions(prevOptions => ({
+            ...prevOptions,
+            custom: [...(prevOptions.custom || []), { name, url }]
+        }));
+    };
+
     return (
         <div className="flex h-full w-full flex-col">
             <Sheet open={isSheetOpen} onOpenChange={setIsSheetOpen}>
@@ -161,7 +171,7 @@ export default function WebPage({ openSheetByDefault = false }: { openSheetByDef
                                 </Button>
                                 {expandedCategories.includes(cat) && (
                                     <div className="pl-4 space-y-2">
-                                        {options.map((option) => (
+                                        {options.map((option: { name: string; url: string }) => (
                                             <Button
                                                 key={option.name}
                                                 variant="ghost"
@@ -176,6 +186,7 @@ export default function WebPage({ openSheetByDefault = false }: { openSheetByDef
                             </div>
                         ))}
                     </div>
+                    <AddCustomSourceDialog onAddSource={addCustomSource} />
                 </SheetContent>
             </Sheet>
             {viewMode === 'tab' && (
