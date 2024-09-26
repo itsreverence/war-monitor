@@ -34,6 +34,8 @@ i18n.use(initReactI18next).init({
                         sourceName: "Source Name",
                         sourceUrl: "Source URL",
                         addSource: "Add Source",
+                        other: "Other",
+                        selectCategory: "Select Category",
                     },
                     settings: {
                         title: "Settings",
@@ -77,6 +79,8 @@ i18n.use(initReactI18next).init({
                         sourceName: "Nome da Fonte",
                         sourceUrl: "URL da Fonte",
                         addSource: "Adicionar Fonte",
+                        other: "Outros",
+                        selectCategory: "Selecione a Categoria",
                     },
                     settings: {
                         title: "Configurações",

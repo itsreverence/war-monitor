@@ -33,7 +33,7 @@ const initialWebOptions = {
         { name: "Google Translate", url: "https://translate.google.com" },
         { name: "DeepL", url: "https://www.deepl.com/translator" },
     ],
-    custom: [],
+    other: [],
 };
 
 export default function WebPage({ openSheetByDefault = false }: { openSheetByDefault?: boolean }) {
@@ -137,10 +137,10 @@ export default function WebPage({ openSheetByDefault = false }: { openSheetByDef
         ));
     };
 
-    const addCustomSource = (name: string, url: string) => {
+    const addCustomSource = (name: string, url: string, category: string) => {
         setWebOptions(prevOptions => ({
             ...prevOptions,
-            custom: [...(prevOptions.custom || []), { name, url }]
+            [category]: [...(prevOptions[category] || []), { name, url }]
         }));
     };
 
@@ -186,7 +186,10 @@ export default function WebPage({ openSheetByDefault = false }: { openSheetByDef
                             </div>
                         ))}
                     </div>
-                    <AddCustomSourceDialog onAddSource={addCustomSource} />
+                    <AddCustomSourceDialog 
+                        onAddSource={addCustomSource} 
+                        categories={['search', 'information', 'verification', 'translation', 'other']}
+                    />
                 </SheetContent>
             </Sheet>
             {viewMode === 'tab' && (

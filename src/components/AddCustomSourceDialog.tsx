@@ -10,23 +10,27 @@ import {
     DialogTitle,
     DialogTrigger,
 } from "@/components/ui/dialog";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useTranslation } from "react-i18next";
 
 interface AddCustomSourceDialogProps {
-    onAddSource: (name: string, url: string) => void;
+    onAddSource: (name: string, url: string, category: string) => void;
+    categories: string[];
 }
 
-export function AddCustomSourceDialog({ onAddSource }: AddCustomSourceDialogProps) {
+export function AddCustomSourceDialog({ onAddSource, categories }: AddCustomSourceDialogProps) {
     const [name, setName] = useState('');
     const [url, setUrl] = useState('');
+    const [category, setCategory] = useState('other');
     const [isOpen, setIsOpen] = useState(false);
     const { t } = useTranslation();
 
     const handleSubmit = () => {
         if (name && url) {
-            onAddSource(name, url);
+            onAddSource(name, url, category);
             setName('');
             setUrl('');
+            setCategory('other');
             setIsOpen(false);
         }
     };
@@ -54,6 +58,18 @@ export function AddCustomSourceDialog({ onAddSource }: AddCustomSourceDialogProp
                         value={url}
                         onChange={(e: React.ChangeEvent<HTMLInputElement>) => setUrl(e.target.value)}
                     />
+                    <Select value={category} onValueChange={setCategory}>
+                        <SelectTrigger>
+                            <SelectValue placeholder={t("nav.web.selectCategory")} />
+                        </SelectTrigger>
+                        <SelectContent>
+                            {categories.map((cat) => (
+                                <SelectItem key={cat} value={cat}>
+                                    {t(`nav.web.${cat}`)}
+                                </SelectItem>
+                            ))}
+                        </SelectContent>
+                    </Select>
                 </div>
                 <DialogFooter>
                     <Button onClick={handleSubmit}>{t("nav.web.addSource")}</Button>
