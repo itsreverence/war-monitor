@@ -7,6 +7,8 @@ import {
     InfoIcon,
     CheckCircleIcon,
     LanguagesIcon,
+    SlidersIcon,
+    ShieldIcon,
 } from "lucide-react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useTranslation } from "react-i18next";
@@ -34,6 +36,11 @@ export function MainNavigationMenu() {
         { key: "translation", icon: <LanguagesIcon className="mr-2 h-4 w-4" /> },
     ];
 
+    const settingsOptions = [
+        { key: "general", icon: <SlidersIcon className="mr-2 h-4 w-4" /> },
+        { key: "web", icon: <ShieldIcon className="mr-2 h-4 w-4" /> },
+    ];
+
     const handleWebOptionClick = (key: string) => {
         navigate(`/web/${key}`, { 
             state: { 
@@ -42,6 +49,10 @@ export function MainNavigationMenu() {
                 timestamp: Date.now()
             } 
         });
+    };
+
+    const handleSettingsOptionClick = (key: string) => {
+        navigate(`/settings/${key}`);
     };
 
     return (
@@ -65,13 +76,24 @@ export function MainNavigationMenu() {
                     </NavigationMenuContent>
                 </NavigationMenuItem>
                 <NavigationMenuItem>
-                    <NavigationMenuLink
-                        className={navigationMenuTriggerStyle()}
-                        onClick={() => navigate("/settings")}
-                    >
+                    <NavigationMenuTrigger>
                         <SettingsIcon className="mr-2 h-4 w-4" />
                         {t("nav.settings.title")}
-                    </NavigationMenuLink>
+                    </NavigationMenuTrigger>
+                    <NavigationMenuContent>
+                        <ul className="grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-2 lg:w-[600px]">
+                            {settingsOptions.map((option) => (
+                                <ListItem
+                                    key={option.key}
+                                    title={t(`nav.settings.${option.key}`)}
+                                    icon={option.icon}
+                                    onClick={() => handleSettingsOptionClick(option.key)}
+                                >
+                                    {t(`nav.settings.${option.key}Description`)}
+                                </ListItem>
+                            ))}
+                        </ul>
+                    </NavigationMenuContent>
                 </NavigationMenuItem>
                 <NavigationMenuItem>
                     <NavigationMenuLink
