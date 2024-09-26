@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useTranslation } from "react-i18next";
 import { Button } from "@/components/ui/button";
-import { MenuIcon, ChevronDown, ChevronUp } from "lucide-react";
+import { MenuIcon, ChevronDown, ChevronUp, Plus } from "lucide-react";
 import {
     Sheet,
     SheetContent,
@@ -11,6 +11,8 @@ import {
 } from "@/components/ui/sheet";
 import { useParams, useLocation, useOutletContext } from "react-router-dom";
 import { useAdBlocker } from "@/hooks/useAdBlocker";
+import { Tab } from "@/types";
+import { TabBar } from "@/components/TabBar";
 
 const webOptions = {
     search: [
@@ -35,7 +37,8 @@ export default function WebPage({ openSheetByDefault = false }: { openSheetByDef
     const { t } = useTranslation();
     const { category } = useParams<{ category: string }>();
     const location = useLocation();
-    const [currentUrl, setCurrentUrl] = useState("");
+    const [tabs, setTabs] = useState<Tab[]>([]);
+    const [activeTabId, setActiveTabId] = useState<string | null>(null);
     const [isSheetOpen, setIsSheetOpen] = useState(false);
     const [expandedCategories, setExpandedCategories] = useState<string[]>([]);
     const { isEnabled: isAdBlockerEnabled } = useAdBlocker();
@@ -57,9 +60,7 @@ export default function WebPage({ openSheetByDefault = false }: { openSheetByDef
     }, [openSheetByDefault]);
 
     const handleOptionClick = (url: string) => {
-        setCurrentUrl(url);
-        setInitialUrl(url);
-        setIsWebView(true);
+        addNewTab(url);
         setIsSheetOpen(false);
     };
 
@@ -67,6 +68,39 @@ export default function WebPage({ openSheetByDefault = false }: { openSheetByDef
         setExpandedCategories(prev =>
             prev.includes(cat) ? prev.filter(c => c !== cat) : [...prev, cat]
         );
+    };
+
+    const addNewTab = (url: string) => {
+        const newTab: Tab = {
+            id: Date.now().toString(),
+            url: url,
+            title: "New Tab",
+        };
+        setTabs(prevTabs => [...prevTabs, newTab]);
+        setActiveTabId(newTab.id);
+        setInitialUrl(url);
+        setIsWebView(true);
+    };
+
+    const closeTab = (tabId: string) => {
+        setTabs(prevTabs => prevTabs.filter(tab => tab.id !== tabId));
+        if (activeTabId === tabId) {
+            const remainingTabs = tabs.filter(tab => tab.id !== tabId);
+            if (remainingTabs.length > 0) {
+                setActiveTabId(remainingTabs[remainingTabs.length - 1].id);
+            } else {
+                setActiveTabId(null);
+                setIsWebView(false);
+            }
+        }
+    };
+
+    const switchTab = (tabId: string) => {
+        setActiveTabId(tabId);
+        const tab = tabs.find(t => t.id === tabId);
+        if (tab) {
+            setInitialUrl(tab.url);
+        }
     };
 
     return (
@@ -113,11 +147,18 @@ export default function WebPage({ openSheetByDefault = false }: { openSheetByDef
                     </div>
                 </SheetContent>
             </Sheet>
+            <TabBar
+                tabs={tabs}
+                activeTabId={activeTabId}
+                onTabClose={closeTab}
+                onTabSwitch={switchTab}
+                onNewTab={() => addNewTab("about:blank")}
+            />
             <div className="flex-grow">
-                {currentUrl ? (
+                {activeTabId ? (
                     <webview
                         ref={webviewRef}
-                        src={currentUrl}
+                        src={tabs.find(t => t.id === activeTabId)?.url || ""}
                         style={{ width: "100%", height: "100%" }}
                         webpreferences={`contextIsolation=yes, nodeIntegration=no${isAdBlockerEnabled ? ", contentBlocking=true" : ""}`}
                     ></webview>

@@ -16,7 +16,8 @@
         },
         "outDir": "dist",
         "moduleResolution": "node",
-        "resolveJsonModule": true
+        "resolveJsonModule": true,
+        "types": ["electron-vite/node"]
     },
     "include": ["src"]
 }

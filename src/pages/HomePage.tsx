@@ -9,9 +9,10 @@ export default function HomePage() {
     const navigate = useNavigate();
     const location = useLocation();
     const [isFullscreen, setIsFullscreen] = useState(false);
-    const webviewRef = useRef<Electron.WebviewTag | null>(null);
+    const webviewRefs = useRef<{ [key: string]: Electron.WebviewTag | null }>({});
     const [initialUrl, setInitialUrl] = useState("");
     const [isWebView, setIsWebView] = useState(false);
+    const [activeTabId, setActiveTabId] = useState<string | null>(null);
 
     const hasWebView = location.pathname.startsWith('/web/') || location.pathname === '/support';
 
@@ -32,7 +33,7 @@ export default function HomePage() {
     }, []);
 
     useEffect(() => {
-        const webview = webviewRef.current;
+        const webview = webviewRefs.current[activeTabId!];
         if (webview) {
             const handleExitFullscreen = () => {
                 setIsFullscreen(false);
@@ -42,10 +43,10 @@ export default function HomePage() {
                 webview.removeEventListener('leave-full-screen', handleExitFullscreen);
             };
         }
-    }, []);
+    }, [activeTabId]);
 
     const handleFullscreen = () => {
-        const webview = webviewRef.current;
+        const webview = webviewRefs.current[activeTabId!];
         if (webview) {
             if (!isFullscreen) {
                 webview.requestFullscreen();
@@ -63,28 +64,28 @@ export default function HomePage() {
     };
 
     const handleReload = () => {
-        const webview = webviewRef.current;
+        const webview = webviewRefs.current[activeTabId!];
         if (webview) {
             webview.reload();
         }
     };
 
     const handleBack = () => {
-        const webview = webviewRef.current;
+        const webview = webviewRefs.current[activeTabId!];
         if (webview && webview.canGoBack()) {
             webview.goBack();
         }
     };
 
     const handleForward = () => {
-        const webview = webviewRef.current;
+        const webview = webviewRefs.current[activeTabId!];
         if (webview && webview.canGoForward()) {
             webview.goForward();
         }
     };
 
     const handleHome = () => {
-        const webview = webviewRef.current;
+        const webview = webviewRefs.current[activeTabId!];
         if (webview && initialUrl) {
             webview.loadURL(initialUrl);
         }
@@ -108,7 +109,7 @@ export default function HomePage() {
                 )}
             </nav>
             <main className="flex-grow overflow-hidden">
-                <Outlet context={{ webviewRef, setInitialUrl, setIsWebView }} />
+                <Outlet context={{ webviewRefs, setInitialUrl, setIsWebView, setActiveTabId }} />
             </main>
         </div>
     );
