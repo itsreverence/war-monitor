@@ -21,7 +21,7 @@ export function MultiPageView({ tabs, onCloseTab, isAdBlockerEnabled }: MultiPag
         <ResizablePanelGroup direction="horizontal" onLayout={(sizes) => setLayout(sizes)}>
             {tabs.map((tab, index) => (
                 <React.Fragment key={tab.id}>
-                    <ResizablePanel defaultSize={layout[index]}>
+                    <ResizablePanel defaultSize={layout[index]} minSize={20}>
                         <div className="flex flex-col h-full">
                             <div className="flex justify-between items-center p-2 bg-secondary">
                                 <span>{tab.title}</span>

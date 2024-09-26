@@ -51,6 +51,7 @@ export default function WebPage({ openSheetByDefault = false }: { openSheetByDef
         setViewMode: React.Dispatch<React.SetStateAction<'single' | 'tab' | 'multi'>>
     }>();
     const [initialUrl, setInitialUrl] = useState("");
+    const [layout, setLayout] = useState<number[]>([]);
 
     useEffect(() => {
         setIsSheetOpen(true);
@@ -93,13 +94,17 @@ export default function WebPage({ openSheetByDefault = false }: { openSheetByDef
             url: url,
             title: new URL(url).hostname,
         };
-        setTabs(prevTabs => [...prevTabs, newTab]);
+        setTabs(prevTabs => {
+            const updatedTabs = [...prevTabs, newTab];
+            if (viewMode === 'multi') {
+                const newLayout = updatedTabs.map(() => 100 / updatedTabs.length);
+                setLayout(newLayout);
+            }
+            return updatedTabs;
+        });
         setActiveTabId(newTab.id);
         setInitialUrl(url);
         setIsWebView(true);
-        if (viewMode === 'multi') {
-            setViewMode('multi'); // This will trigger a re-render and adjust the layout
-        }
     };
 
     const closeTab = (tabId: string) => {
