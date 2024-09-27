@@ -7,27 +7,16 @@ import { Button } from "@/components/ui/button";
 
 export default function WebSettingsPage() {
     const { t } = useTranslation();
-    const { webOptions, setWebOptions } = useWebContext();
+    const { webOptions, updateWebOption, addWebOption } = useWebContext();
     const [editingSource, setEditingSource] = useState<CustomSource | undefined>(undefined);
     const [isDialogOpen, setIsDialogOpen] = useState(false);
 
     const addCustomSource = (name: string, url: string, category: string) => {
-        setWebOptions(prevOptions => ({
-            ...prevOptions,
-            [category]: [...(prevOptions[category] || []), { name, url }]
-        }));
+        addWebOption(category, name, url);
     };
 
     const editCustomSource = (oldName: string, name: string, url: string, category: string) => {
-        setWebOptions(prevOptions => {
-            const newOptions = { ...prevOptions };
-            Object.keys(newOptions).forEach(cat => {
-                newOptions[cat] = newOptions[cat].map(source => 
-                    source.name === oldName ? { name, url } : source
-                );
-            });
-            return newOptions;
-        });
+        updateWebOption(category, oldName, name, url);
     };
 
     const handleEditSource = (source: CustomSource) => {

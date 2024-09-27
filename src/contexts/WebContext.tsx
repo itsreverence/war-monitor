@@ -1,4 +1,4 @@
-import React, { createContext, useState, useContext } from 'react';
+import React, { createContext, useState, useContext, useEffect } from 'react';
 
 const initialWebOptions = {
     search: [
@@ -22,16 +22,41 @@ const initialWebOptions = {
 
 interface WebContextType {
     webOptions: Record<string, { name: string; url: string }[]>;
-    setWebOptions: React.Dispatch<React.SetStateAction<Record<string, { name: string; url: string }[]>>>;
+    updateWebOption: (category: string, oldName: string, newName: string, newUrl: string) => void;
+    addWebOption: (category: string, name: string, url: string) => void;
 }
 
 const WebContext = createContext<WebContextType | undefined>(undefined);
 
 export const WebProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-    const [webOptions, setWebOptions] = useState<Record<string, { name: string; url: string }[]>>(initialWebOptions);
+    const [webOptions, setWebOptions] = useState<Record<string, { name: string; url: string }[]>>(() => {
+        const storedOptions = localStorage.getItem('webOptions');
+        return storedOptions ? JSON.parse(storedOptions) : initialWebOptions;
+    });
+
+    useEffect(() => {
+        localStorage.setItem('webOptions', JSON.stringify(webOptions));
+    }, [webOptions]);
+
+    const updateWebOption = (category: string, oldName: string, newName: string, newUrl: string) => {
+        setWebOptions(prevOptions => {
+            const newOptions = { ...prevOptions };
+            newOptions[category] = prevOptions[category].map(option => 
+                option.name === oldName ? { name: newName, url: newUrl } : option
+            );
+            return newOptions;
+        });
+    };
+
+    const addWebOption = (category: string, name: string, url: string) => {
+        setWebOptions(prevOptions => ({
+            ...prevOptions,
+            [category]: [...prevOptions[category], { name, url }]
+        }));
+    };
 
     return (
-        <WebContext.Provider value={{ webOptions, setWebOptions }}>
+        <WebContext.Provider value={{ webOptions, updateWebOption, addWebOption }}>
             {children}
         </WebContext.Provider>
     );

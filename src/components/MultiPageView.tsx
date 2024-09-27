@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { ResizablePanelGroup, ResizablePanel, ResizableHandle } from '@/components/ui/resizable';
 import { Button } from '@/components/ui/button';
 import { Tab } from "@/types";
+import { useWebContext } from '@/contexts/WebContext';
 
 interface MultiPageViewProps {
     tabs: Tab[];
@@ -12,11 +13,16 @@ interface MultiPageViewProps {
 
 export function MultiPageView({ tabs, onCloseTab, isAdBlockerEnabled, layoutDirection }: MultiPageViewProps) {
     const [sizes, setSizes] = useState<number[]>([]);
+    const { webOptions } = useWebContext();
 
     useEffect(() => {
-        const newLayout = tabs.map(() => 100 / tabs.length);
-        setSizes(newLayout);
-    }, [tabs.length]);
+        setSizes(tabs.map(() => 100 / tabs.length));
+    }, [tabs]);
+
+    const getTabName = (tab: Tab) => {
+        const option = Object.values(webOptions).flat().find(opt => opt.url === tab.url);
+        return option ? option.name : tab.title;
+    };
 
     return (
         <ResizablePanelGroup direction={layoutDirection} onLayout={(newSizes) => setSizes(newSizes)}>
@@ -25,7 +31,7 @@ export function MultiPageView({ tabs, onCloseTab, isAdBlockerEnabled, layoutDire
                     <ResizablePanel defaultSize={sizes[index]} minSize={20}>
                         <div className="flex flex-col h-full">
                             <div className="flex justify-between items-center p-2 bg-secondary">
-                                <span>{tab.title}</span>
+                                <span>{getTabName(tab)}</span>
                                 <Button variant="ghost" size="sm" onClick={() => onCloseTab(tab.id)}>
                                     &times;
                                 </Button>

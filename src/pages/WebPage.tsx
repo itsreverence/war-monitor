@@ -55,6 +55,24 @@ export default function WebPage({ openSheetByDefault = false }: { openSheetByDef
         }
     }, [activeTabId, webviewRef]);
 
+    useEffect(() => {
+        setTabs(prevTabs => prevTabs.map(tab => {
+            const updatedOption = Object.values(webOptions).flat().find(option => option.url === tab.url);
+            return updatedOption ? { ...tab, title: updatedOption.name } : tab;
+        }));
+    }, [webOptions]);
+
+    useEffect(() => {
+        const storedTabs = localStorage.getItem('tabs');
+        if (storedTabs) {
+            setTabs(JSON.parse(storedTabs));
+        }
+    }, []);
+
+    useEffect(() => {
+        localStorage.setItem('tabs', JSON.stringify(tabs));
+    }, [tabs]);
+
     const handleOptionClick = (url: string) => {
         addNewTab(url);
         setIsSheetOpen(false);

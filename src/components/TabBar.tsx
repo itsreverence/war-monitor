@@ -1,8 +1,8 @@
 // src/components/TabBar.tsx
-import React from "react";
-import { Tab } from "@/types";
-import { Button } from "@/components/ui/button";
-import { X, Plus } from "lucide-react";
+import React from 'react';
+import { Tab } from '@/types';
+import { Button } from '@/components/ui/button';
+import { useWebContext } from '@/contexts/WebContext';
 
 interface TabBarProps {
     tabs: Tab[];
@@ -13,31 +13,41 @@ interface TabBarProps {
 }
 
 export function TabBar({ tabs, activeTabId, onTabClose, onTabSwitch, onNewTab }: TabBarProps) {
+    const { webOptions } = useWebContext();
+
+    const getTabName = (tab: Tab) => {
+        for (const [category, options] of Object.entries(webOptions)) {
+            const option = options.find(opt => opt.url === tab.url);
+            if (option) {
+                return option.name;
+            }
+        }
+        return tab.title;
+    };
+
     return (
-        <div className="flex items-center bg-background border-b">
+        <div className="flex overflow-x-auto">
             {tabs.map((tab) => (
-                <div
+                <Button
                     key={tab.id}
-                    className={`flex items-center px-4 py-2 cursor-pointer ${
-                        activeTabId === tab.id ? "bg-secondary" : ""
-                    }`}
+                    variant={tab.id === activeTabId ? "default" : "ghost"}
+                    className="px-3 py-1 text-sm"
                     onClick={() => onTabSwitch(tab.id)}
                 >
-                    <span className="mr-2 truncate max-w-xs">{tab.title}</span>
-                    <Button
-                        variant="ghost"
-                        size="sm"
+                    {getTabName(tab)}
+                    <span
+                        className="ml-2 text-xs"
                         onClick={(e) => {
                             e.stopPropagation();
                             onTabClose(tab.id);
                         }}
                     >
-                        <X className="h-4 w-4" />
-                    </Button>
-                </div>
+                        &times;
+                    </span>
+                </Button>
             ))}
-            <Button variant="ghost" size="sm" onClick={onNewTab}>
-                <Plus className="h-4 w-4" />
+            <Button variant="ghost" className="px-3 py-1 text-sm" onClick={onNewTab}>
+                +
             </Button>
         </div>
     );
