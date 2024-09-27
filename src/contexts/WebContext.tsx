@@ -1,27 +1,28 @@
 import React, { createContext, useState, useContext, useEffect } from 'react';
+import { CustomSource } from '@/components/AddCustomSourceDialog';
 
-const initialWebOptions = {
+const initialWebOptions: Record<string, CustomSource[]> = {
     search: [
-        { name: "Google", url: "https://www.google.com" },
-        { name: "Bing", url: "https://www.bing.com" },
+        { name: "Google", url: "https://www.google.com", category: "search" },
+        { name: "Bing", url: "https://www.bing.com", category: "search" },
     ],
     information: [
-        { name: "Wikipedia", url: "https://www.wikipedia.org" },
-        { name: "Britannica", url: "https://www.britannica.com" },
+        { name: "Wikipedia", url: "https://www.wikipedia.org", category: "information" },
+        { name: "Britannica", url: "https://www.britannica.com", category: "information" },
     ],
     verification: [
-        { name: "Snopes", url: "https://www.snopes.com" },
-        { name: "FactCheck.org", url: "https://www.factcheck.org" },
+        { name: "Snopes", url: "https://www.snopes.com", category: "verification" },
+        { name: "FactCheck.org", url: "https://www.factcheck.org", category: "verification" },
     ],
     translation: [
-        { name: "Google Translate", url: "https://translate.google.com" },
-        { name: "DeepL", url: "https://www.deepl.com/translator" },
+        { name: "Google Translate", url: "https://translate.google.com", category: "translation" },
+        { name: "DeepL", url: "https://www.deepl.com/translator", category: "translation" },
     ],
     other: [],
 };
 
 interface WebContextType {
-    webOptions: Record<string, { name: string; url: string }[]>;
+    webOptions: Record<string, CustomSource[]>;
     updateWebOption: (category: string, oldName: string, newName: string, newUrl: string) => void;
     addWebOption: (category: string, name: string, url: string) => void;
 }
@@ -29,7 +30,7 @@ interface WebContextType {
 const WebContext = createContext<WebContextType | undefined>(undefined);
 
 export const WebProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-    const [webOptions, setWebOptions] = useState<Record<string, { name: string; url: string }[]>>(() => {
+    const [webOptions, setWebOptions] = useState<Record<string, CustomSource[]>>(() => {
         const storedOptions = localStorage.getItem('webOptions');
         return storedOptions ? JSON.parse(storedOptions) : initialWebOptions;
     });
@@ -42,7 +43,7 @@ export const WebProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         setWebOptions(prevOptions => {
             const newOptions = { ...prevOptions };
             newOptions[category] = prevOptions[category].map(option => 
-                option.name === oldName ? { name: newName, url: newUrl } : option
+                option.name === oldName ? { name: newName, url: newUrl, category } : option
             );
             return newOptions;
         });
@@ -51,7 +52,7 @@ export const WebProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     const addWebOption = (category: string, name: string, url: string) => {
         setWebOptions(prevOptions => ({
             ...prevOptions,
-            [category]: [...prevOptions[category], { name, url }]
+            [category]: [...prevOptions[category], { name, url, category }]
         }));
     };
 

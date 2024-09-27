@@ -40,6 +40,7 @@ i18n.use(initReactI18next).init({
                         editCustomSourceDescription: "Modify the details of your custom source",
                         saveChanges: "Save Changes",
                         edit: "Edit",
+                        customSources: "Custom Sources",
                     },
                     settings: {
                         title: "Settings",
@@ -53,6 +54,8 @@ i18n.use(initReactI18next).init({
                         web: "Web",
                         webDescription: "Configure web-related settings",
                         customSources: "Custom Sources",
+                        manageCustomSources: "Manage Custom Sources",
+                        manageCustomSourcesDescription: "Add, edit, or remove custom web sources",
                     },
                     support: "Support",
                 },
@@ -94,6 +97,7 @@ i18n.use(initReactI18next).init({
                         editCustomSourceDescription: "Modifique os detalhes da sua fonte personalizada",
                         saveChanges: "Salvar Alterações",
                         edit: "Editar",
+                        customSources: "Fontes Personalizadas",
                     },
                     settings: {
                         title: "Configurações",
@@ -107,6 +111,8 @@ i18n.use(initReactI18next).init({
                         web: "Web",
                         webDescription: "Configure web-related settings",
                         customSources: "Fontes Personalizadas",
+                        manageCustomSources: "Gerenciar Fontes Personalizadas",
+                        manageCustomSourcesDescription: "Adicione, edite ou remova fontes web personalizadas",
                     },
                     support: "Suporte",
                 },

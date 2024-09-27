@@ -107,7 +107,7 @@ export default function HomePage() {
     };
 
     return (
-        <div className="flex h-screen flex-col">
+        <div className="flex flex-col h-screen">
             <nav className="bg-background p-4 flex justify-between items-center">
                 <MainNavigationMenu />
                 {isWebView && (
@@ -128,7 +128,7 @@ export default function HomePage() {
                     />
                 )}
             </nav>
-            <main className="flex-grow overflow-hidden">
+            <main className="flex-1 overflow-hidden">
                 <Outlet context={{ webviewRef, setInitialUrl, setIsWebView, viewMode, setViewMode, multiPageLayout }} />
             </main>
         </div>
